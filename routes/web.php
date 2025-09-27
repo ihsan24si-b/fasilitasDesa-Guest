@@ -8,3 +8,4 @@ Route::get('/', function () {
 
 Route::get('/fasilitas', [FasilitasController::class, 'index']);
 
+Route::get('/fasilitas', [FasilitasController::class, 'index']);
