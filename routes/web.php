@@ -2,37 +2,27 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WargaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FasilitasUmumController;
 
+// Redirect root to dashboard
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('dashboard');
 });
 
-Route::get('/fasilitas', [FasilitasController::class, 'index']);
-
-Route::get('/fasilitas', [FasilitasController::class, 'index']);
-
-// Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
-
-
-Route::get('/auth', [AuthController::class, 'index']);
-Route::post('/auth/login', [AuthController::class, 'login']);
-
-Route::get('dashboard' ,[DashboardController::class, 'index'])->name('dashboard');
-
-Route::get('/auth', [AuthController::class, 'index'])->name('auth.index');
-Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login');
-
-Route::get('/auth/register', [AuthController::class, 'showRegisterForm'])->name('auth.showRegister');
-Route::post('/auth/register', [AuthController::class, 'register'])->name('auth.register');
-
+// Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::get('/auth/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');
-Route::post('/auth/register', [AuthController::class, 'register'])->name('auth.register.process');
-
+Route::prefix('auth')->group(function () {
+    Route::get('/login', [AuthController::class, 'index'])->name('auth.index');
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth.register.form');
+    Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
+    Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout'); // INI POST
+});
+// Resource Routes (CRUD)
+Route::resource('user', UserController::class);
 Route::resource('warga', WargaController::class);
 Route::resource('fasilitas', FasilitasUmumController::class);

@@ -12,7 +12,7 @@ class WargaController extends Controller
     public function index()
     {
         $data['dataWarga'] = Warga::all();
-        return view('admin.warga.index', $data);
+        return view('warga.index', $data);
     }
 
     /**
@@ -20,7 +20,7 @@ class WargaController extends Controller
      */
     public function create()
     {
-        return view('admin.warga.create');
+        return view('warga.create');
     }
 
     /**
@@ -42,7 +42,7 @@ class WargaController extends Controller
             'no_ktp.unique' => 'No KTP tidak valid',
             'nama.required' => 'Nama wajib diisi',
             'email.unique' => 'Email sudah terdaftar',
-            
+
         ]);
 
         // Jika validation passed, create data
@@ -66,7 +66,7 @@ class WargaController extends Controller
     public function edit(string $id)
     {
         $data['dataWarga'] = Warga::findOrFail($id);
-        return view('admin.warga.edit', $data);
+        return view('warga.edit', $data);
     }
 
     /**

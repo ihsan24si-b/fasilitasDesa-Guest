@@ -13,7 +13,7 @@ class FasilitasUmumController extends Controller
     public function index()
     {
         $data['dataFasilitas'] = FasilitasUmum::all();
-        return view('admin.fasilitas.index', $data);
+        return view('fasilitas.index', $data);
     }
 
     /**
@@ -21,7 +21,7 @@ class FasilitasUmumController extends Controller
      */
     public function create()
     {
-        return view('admin.fasilitas.create');
+        return view('fasilitas.create');
     }
 
     /**
@@ -68,7 +68,7 @@ class FasilitasUmumController extends Controller
     public function edit(string $id)
     {
         $data['dataFasilitas'] = FasilitasUmum::findOrFail($id);
-        return view('admin.fasilitas.edit', $data);
+        return view('fasilitas.edit', $data);
     }
 
     /**

@@ -17,6 +17,7 @@ class DashboardController extends Controller
             return redirect()->route('auth.index')
                            ->with('error', 'Silakan login terlebih dahulu!');
         }
+              // $users = User::all();
 
         return view('dashboard');
     }
