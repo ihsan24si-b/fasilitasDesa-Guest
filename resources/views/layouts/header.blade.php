@@ -6,12 +6,12 @@
     <a href="#" class="sidebar-toggler flex-shrink-0">
         <i class="fa fa-bars"></i>
     </a>
-    
+
     <!-- Search Form -->
     <form class="d-none d-md-flex ms-4">
         <input class="form-control border-0" type="search" placeholder="Search">
     </form>
-    
+
     <div class="navbar-nav align-items-center ms-auto">
         <!-- Navigation Menu -->
         <div class="nav-item me-3">
@@ -20,7 +20,7 @@
                 <a href="{{ route('warga.index') }}" class="nav-link {{ request()->routeIs('warga.*') ? 'text-primary' : '' }}">Data Warga</a>
                 <a href="{{ route('fasilitas.index') }}" class="nav-link {{ request()->routeIs('fasilitas.*') ? 'text-primary' : '' }}">Data Fasilitas</a>
                 <a href="{{ route('user.index') }}" class="nav-link {{ request()->routeIs('user.*') ? 'text-primary' : '' }}">Data User</a>
-                
+
                 <!-- Pages Dropdown -->
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
@@ -33,7 +33,7 @@
                         <a href="{{ route('not-found') }}" class="dropdown-item">404 Page</a>
                     </div>
                 </div>
-                
+
                 <a href="{{ route('contact') }}" class="nav-link {{ request()->routeIs('contact') ? 'text-primary' : '' }}">Contact</a>
             </div>
         </div>

@@ -11,7 +11,7 @@ use App\Http\Controllers\HomepageController;
 
 
 Route::get('/', function () {
-    return view('welcome ');
+    return view('homepage');
 });
 Route::get('/', function () {
     return view('welcome ');
@@ -43,7 +43,7 @@ Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth
 Route::post('/register', [AuthController::class, 'register'])->name('auth.register.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
-    
+
 Route::resource('warga', WargaController::class);
 Route::resource('fasilitas', \App\Http\Controllers\FasilitasUmumController::class);
 Route::resource('user', \App\Http\Controllers\UserController::class);
