@@ -11,7 +11,7 @@
             <p class="mb-0">List data seluruh warga desa</p>
         </div>
         <div>
-            <a href="{{ route('warga.create') }}" class="btn btn-success">
+            <a href="{{ route('pages.warga.create') }}" class="btn btn-success">
                 <i class="fas fa-plus me-2"></i>Tambah Warga
             </a>
         </div>
@@ -50,10 +50,10 @@
                         <td>{{ $item->telp }}</td>
                         <td>{{ $item->email }}</td>
                         <td>
-                            <a href="{{ route('warga.edit', $item->warga_id) }}" class="btn btn-warning btn-sm">
+                            <a href="{{ route('pages.warga.edit', $item->warga_id) }}" class="btn btn-warning btn-sm">
                                 <i class="fas fa-edit me-1"></i>Edit
                             </a>
-                            <form action="{{ route('warga.destroy', $item->warga_id) }}" method="POST" class="d-inline">
+                            <form action="{{ route('pages.warga.destroy', $item->warga_id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus?')">

@@ -12,7 +12,7 @@ class WargaController extends Controller
     public function index()
     {
         $data['dataWarga'] = Warga::all();
-        return view('warga.index', $data);
+        return view('pages.warga.index', $data);
     }
 
     /**
@@ -20,7 +20,7 @@ class WargaController extends Controller
      */
     public function create()
     {
-        return view('warga.create');
+        return view('pages.warga.create');
     }
 
     /**
@@ -48,7 +48,7 @@ class WargaController extends Controller
         // Jika validation passed, create data
         Warga::create($validated);
 
-        return redirect()->route('warga.index')
+        return redirect()->route('pages.warga.index')
             ->with('success', 'Data warga berhasil ditambahkan!');
     }
 
@@ -66,7 +66,7 @@ class WargaController extends Controller
     public function edit(string $id)
     {
         $data['dataWarga'] = Warga::findOrFail($id);
-        return view('warga.edit', $data);
+        return view('pages.warga.edit', $data);
     }
 
     /**
@@ -89,7 +89,7 @@ class WargaController extends Controller
 
         $warga->update($validated);
 
-        return redirect()->route('warga.index')
+        return redirect()->route('pages.warga.index')
             ->with('success', 'Data warga berhasil diubah!');
     }
 
@@ -101,6 +101,6 @@ class WargaController extends Controller
         $warga = Warga::findOrFail($id);
         $warga->delete();
 
-        return redirect()->route('warga.index')->with('success', 'Data warga berhasil dihapus');
+        return redirect()->route('pages.warga.index')->with('success', 'Data warga berhasil dihapus');
     }
 }

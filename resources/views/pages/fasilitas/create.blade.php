@@ -11,14 +11,14 @@
                 <p class="mb-0">Form untuk menambahkan fasilitas baru</p>
             </div>
             <div>
-                <a href="{{ route('fasilitas.index') }}" class="btn btn-secondary">
+                <a href="{{ route('pages.fasilitas.index') }}" class="btn btn-secondary">
                     <i class="fas fa-arrow-left me-2"></i>Kembali
                 </a>
             </div>
         </div>
 
         <div class="bg-light rounded p-4">
-            <form action="{{ route('fasilitas.store') }}" method="POST">
+            <form action="{{ route('pages.fasilitas.store') }}" method="POST">
                 @csrf
                 <div class="row">
                     <div class="col-md-6">
@@ -110,7 +110,7 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-save me-2"></i> Simpan Data
                         </button>
-                        <a href="{{ route('fasilitas.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('pages.fasilitas.index') }}" class="btn btn-secondary">
                             <i class="fas fa-times me-2"></i> Batal
                         </a>
                     </div>
@@ -118,6 +118,6 @@
             </form>
         </div>
     </div>
-    
+
 <!-- Tambah Fasilitas End -->
 @endsection

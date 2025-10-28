@@ -1,6 +1,6 @@
 <div class="sidebar pe-4 pb-3">
     <nav class="navbar bg-light navbar-light">
-        <a href="{{ url('/dashboard') }}" class="navbar-brand mx-4 mb-4 px-3">
+        <a href="{{ route('dashboard') }}" class="navbar-brand mx-4 mb-4 px-3">
             <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>FDPR</h3>
         </a>
 
@@ -19,30 +19,30 @@
         </div>
 
         <div class="navbar-nav w-100 px-3">
-            <a href="{{ url('/dashboard') }}"
-                class="nav-item nav-link {{ request()->is('dashboard') ? 'active' : '' }}">
+            <a href="{{ route('dashboard') }}"
+                class="nav-item nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                 <i class="fa fa-tachometer-alt me-2"></i>Dashboard
             </a>
 
-            <a href="{{ route('warga.index') }}"
-                class="nav-item nav-link {{ request()->is('warga*') ? 'active' : '' }}">
+            <a href="{{ route('pages.fasilitas.index') }}"
+                class="nav-item nav-link {{ request()->routeIs('pages.fasilitas.*') ? 'active' : '' }}">
+                <i class="fas fa-building me-2"></i>Data Fasilitas
+            </a>
+
+            <a href="{{ route('pages.warga.index') }}"
+                class="nav-item nav-link {{ request()->routeIs('pages.warga.*') ? 'active' : '' }}">
                 <i class="fas fa-users me-2"></i>Data Warga
             </a>
 
-            <a href="{{ route('fasilitas.index') }}"
-                class="nav-item nav-link {{ request()->is('fasilitas*') ? 'active' : '' }}">
-                <i class="fas fa-building me-2"></i>Data Fasilitas
-            </a>
-            <a href="{{ route('user.index') }}"
-                class="nav-item nav-link {{ request()->is('user*') ? 'active' : '' }}">
+            <a href="{{ route('pages.user.index') }}"
+                class="nav-item nav-link {{ request()->routeIs('pages.user.*') ? 'active' : '' }}">
                 <i class="fas fa-user me-2"></i>Data User
             </a>
-
         </div>
 
         <!-- Tombol Logout -->
         <div class="mt-4 pt-3 border-top">
-            <form action="{{ route('auth.logout') }}" method="POST" class="w-100 px-3">
+            <form action="{{ route('pages.auth.logout') }}" method="POST" class="w-100 px-3">
                 @csrf
                 <button type="submit" class="btn btn-outline-danger w-100"
                     onclick="return confirm('Yakin ingin logout?')">

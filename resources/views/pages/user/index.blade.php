@@ -10,7 +10,7 @@
             <p class="mb-0">List data seluruh user sistem</p>
         </div>
         <div>
-            <a href="{{ route('user.create') }}" class="btn btn-success">
+            <a href="{{ route('pages.user.create') }}" class="btn btn-success">
                 <i class="fas fa-plus me-2"></i>Tambah User
             </a>
         </div>
@@ -52,10 +52,10 @@
                             <small class="text-muted">{{ substr($item->password, 0, 20) }}...</small>
                         </td>
                         <td>
-                            <a href="{{ route('user.edit', $item->id) }}" class="btn btn-warning btn-sm">
+                            <a href="{{ route('pages.user.edit', $item->id) }}" class="btn btn-warning btn-sm">
                                 <i class="fas fa-edit me-1"></i>Edit
                             </a>
-                            <form action="{{ route('user.destroy', $item->id) }}" method="POST" class="d-inline">
+                            <form action="{{ route('pages.user.destroy', $item->id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus user ini?')">

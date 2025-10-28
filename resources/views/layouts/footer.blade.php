@@ -5,6 +5,8 @@
             <div class="col-12 col-sm-6 text-center text-sm-start">
                 &copy; <a href="#">FDPR-ADMIN</a>
             </div>
+
+            
         </div>
     </div>
 </div>

@@ -14,12 +14,12 @@ class DashboardController extends Controller
          {
         // Cek jika user sudah login
         if (!session('admin_logged_in')) {
-            return redirect()->route('auth.index')
+            return redirect()->route('pages.auth.index')
                            ->with('error', 'Silakan login terlebih dahulu!');
         }
               // $users = User::all();
 
-        return view('dashboard');
+        return view('pages.dashboard');
     }
     }
 

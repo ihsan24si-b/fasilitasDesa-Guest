@@ -14,7 +14,7 @@ class AuthController extends Controller
      */
     public function index()
     {
-        return view('auth.login-form');
+        return view('pages.auth.login-form');
     }
 
     /**
@@ -22,7 +22,7 @@ class AuthController extends Controller
      */
     public function showRegisterForm()
     {
-        return view('auth.register');
+        return view('pages.auth.register');
     }
 
     /**
@@ -106,7 +106,7 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password),
             ]);
 
-            return redirect()->route('auth.index')
+            return redirect()->route('pages.auth.index')
                 ->with('success', 'Registrasi berhasil! Silakan Login');
 
         } catch (\Exception $e) {
@@ -122,7 +122,8 @@ class AuthController extends Controller
     public function logout()
     {
         session()->forget(['admin_logged_in', 'admin_username', 'admin_email', 'admin_role']);
-        return redirect()->route('auth.index')
+        return redirect()->route('pages.auth.index')
             ->with('success', 'Anda telah logout!');
     }
 }
+

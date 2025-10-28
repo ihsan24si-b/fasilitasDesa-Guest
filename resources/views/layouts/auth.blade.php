@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'FDPR Admin')</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <style>
         * {
             margin: 0;
@@ -24,21 +27,42 @@
         }
 
         body {
-            background: linear-gradient(135deg, var(--primary) 0%, #0056b3 100%);
+            background: linear-gradient(135deg, rgba(0, 156, 255, 0.4) 0%, rgba(0, 86, 179, 0.4) 100%),
+                        url('{{ asset('assets/img/gambar.png') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            position: relative;
+        }
+
+        /* Overlay yang lebih transparan */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+            z-index: -1;
         }
 
         .auth-container {
             background: white;
             padding: 40px;
             border-radius: var(--border-radius);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             width: 100%;
             max-width: 400px;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(1px);
         }
 
         .app-title {
@@ -78,7 +102,66 @@
             font-size: 14px;
         }
 
-        input {
+        /* Input Group Styles untuk Icon */
+        .input-group {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .input-group-text {
+            background-color: var(--light);
+            border: 2px solid var(--light);
+            border-right: none;
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+            padding: 12px 15px;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 50px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--light);
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            border-left: none;
+            font-size: 14px;
+            background-color: var(--light);
+            transition: 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: white;
+            border-left: none;
+        }
+
+        /* [PENYESUAIAN] Style error untuk input di dalam input-group */
+        .input-group input.input-error {
+            border-color: var(--danger) !important;
+            background-color: rgba(231, 76, 60, 0.05) !important;
+            border-left: none;
+        }
+
+        /* [PENYESUAIAN] Style error untuk icon-span saat input error */
+        .input-group input.input-error + .input-group-text,
+        .input-group .input-group-text.input-error-sibling {
+            border-color: var(--danger) !important;
+            background-color: rgba(231, 76, 60, 0.05) !important;
+        }
+
+        /* (Gaya ini masih diperlukan untuk input yang MUNGKIN tidak pakai icon) */
+        input.input-error {
+            border-color: var(--danger) !important;
+            background-color: rgba(231, 76, 60, 0.05) !important;
+        }
+
+        /* Style untuk input tanpa icon (fallback) */
+        input:not(.input-group input) {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid var(--light);
@@ -88,15 +171,10 @@
             transition: 0.3s;
         }
 
-        input:focus {
+        input:not(.input-group input):focus {
             outline: none;
             border-color: var(--primary);
             background-color: white;
-        }
-
-        .input-error {
-            border-color: var(--danger);
-            background-color: rgba(231, 76, 60, 0.05);
         }
 
         small {
@@ -117,6 +195,10 @@
             cursor: pointer;
             transition: 0.3s;
             margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .btn-login {
@@ -184,6 +266,11 @@
             display: block;
         }
 
+        /* Fallback jika gambar tidak ditemukan */
+        .auth-container {
+            background: white;
+        }
+
         @media (max-width: 480px) {
             .auth-container {
                 padding: 30px 25px;
@@ -196,13 +283,48 @@
             h2 {
                 font-size: 22px;
             }
+
+            body {
+                padding: 15px;
+                background-attachment: scroll;
+            }
+        }
+
+        /* Untuk perangkat dengan layar sangat kecil */
+        @media (max-width: 320px) {
+            .auth-container {
+                padding: 20px 15px;
+            }
+
+            .input-group-text {
+                min-width: 45px;
+                padding: 12px 12px;
+            }
         }
     </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const body = document.querySelector('body');
+            const img = new Image();
+
+            img.src = '{{ asset('assets/img/gambar.png') }}';
+
+            img.onload = function() {
+                console.log('Background image loaded successfully');
+            };
+
+            img.onerror = function() {
+                console.log('Background image failed to load, using gradient fallback');
+                body.style.background = 'linear-gradient(135deg, rgba(0, 156, 255, 0.6) 0%, rgba(0, 86, 179, 0.6) 100%)';
+            };
+        });
+    </script>
 </head>
 <body>
     <div class="auth-container">
         <div class="app-title">FDPR</div>
-        <div class="app-subtitle">Admin</div>
+        <div class="app-subtitle">Fasilitas Desa dan Peminjaman Ruang</div>
         @yield('content')
     </div>
 </body>

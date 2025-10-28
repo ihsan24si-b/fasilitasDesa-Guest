@@ -11,14 +11,14 @@
             <p class="mb-0">Form untuk mengubah data warga</p>
         </div>
         <div>
-            <a href="{{ route('warga.index') }}" class="btn btn-secondary">
+            <a href="{{ route('pages.warga.index') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left me-2"></i>Kembali
             </a>
         </div>
     </div>
 
     <div class="bg-light rounded p-4">
-        <form action="{{ route('warga.update', $dataWarga->warga_id) }}" method="POST">
+        <form action="{{ route('pages.warga.update', $dataWarga->warga_id) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="row">
@@ -107,7 +107,7 @@
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save me-2"></i> Simpan Perubahan
                     </button>
-                    <a href="{{ route('warga.index') }}" class="btn btn-secondary">
+                    <a href="{{ route('pages.warga.index') }}" class="btn btn-secondary">
                         <i class="fas fa-times me-2"></i> Batal
                     </a>
                 </div>

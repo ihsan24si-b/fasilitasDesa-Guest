@@ -11,7 +11,7 @@
             <p class="mb-0">List data seluruh fasilitas desa</p>
         </div>
         <div>
-            <a href="{{ route('fasilitas.create') }}" class="btn btn-success">
+            <a href="{{ route('pages.fasilitas.create') }}" class="btn btn-success">
                 <i class="fas fa-plus me-2"></i>Tambah Fasilitas
             </a>
         </div>
@@ -60,10 +60,10 @@
                         <td>{{ $item->rt }}/{{ $item->rw }}</td>
                         <td>{{ $item->kapasitas }} orang</td>
                         <td>
-                            <a href="{{ route('fasilitas.edit', $item->fasilitas_id) }}" class="btn btn-warning btn-sm">
+                            <a href="{{ route('pages.fasilitas.edit', $item->fasilitas_id) }}" class="btn btn-warning btn-sm">
                                 <i class="fas fa-edit me-1"></i>Edit
                             </a>
-                            <form action="{{ route('fasilitas.destroy', $item->fasilitas_id) }}" method="POST" class="d-inline">
+                            <form action="{{ route('pages.fasilitas.destroy', $item->fasilitas_id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus fasilitas ini?')">

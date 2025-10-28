@@ -13,7 +13,7 @@ class FasilitasUmumController extends Controller
     public function index()
     {
         $data['dataFasilitas'] = FasilitasUmum::all();
-        return view('fasilitas.index', $data);
+        return view('pages.fasilitas.index', $data);
     }
 
     /**
@@ -21,7 +21,7 @@ class FasilitasUmumController extends Controller
      */
     public function create()
     {
-        return view('fasilitas.create');
+        return view('pages.fasilitas.create');
     }
 
     /**
@@ -50,7 +50,7 @@ class FasilitasUmumController extends Controller
 
         FasilitasUmum::create($validated);
 
-        return redirect()->route('fasilitas.index')
+        return redirect()->route('pages.fasilitas.index')
             ->with('success', 'Data fasilitas berhasil ditambahkan!');
     }
 
@@ -68,7 +68,7 @@ class FasilitasUmumController extends Controller
     public function edit(string $id)
     {
         $data['dataFasilitas'] = FasilitasUmum::findOrFail($id);
-        return view('fasilitas.edit', $data);
+        return view('pages.fasilitas.edit', $data);
     }
 
     /**
@@ -99,7 +99,7 @@ class FasilitasUmumController extends Controller
 
         $fasilitas->update($validated);
 
-        return redirect()->route('fasilitas.index')
+        return redirect()->route('pages.fasilitas.index')
             ->with('success', 'Data fasilitas berhasil diubah!');
     }
 
@@ -111,7 +111,7 @@ class FasilitasUmumController extends Controller
         $fasilitas = FasilitasUmum::findOrFail($id);
         $fasilitas->delete();
 
-        return redirect()->route('fasilitas.index')
+        return redirect()->route('pages.fasilitas.index')
             ->with('success', 'Data fasilitas berhasil dihapus!');
     }
 }

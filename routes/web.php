@@ -15,14 +15,42 @@ Route::get('/', function () {
 // Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::prefix('auth')->group(function () {
-    Route::get('/login', [AuthController::class, 'index'])->name('auth.index');
-    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth.register.form');
-    Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
-    Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout'); // INI POST
+// Auth Routes
+Route::prefix('pages/auth')->group(function () {
+    Route::get('/login', [AuthController::class, 'index'])->name('pages.auth.index');
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('pages.auth.register.form');
+    Route::post('/login', [AuthController::class, 'login'])->name('pages.auth.login');
+    Route::post('/register', [AuthController::class, 'register'])->name('pages.auth.register');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('pages.auth.logout');
 });
-// Resource Routes (CRUD)
-Route::resource('user', UserController::class);
-Route::resource('warga', WargaController::class);
-Route::resource('fasilitas', FasilitasUmumController::class);
+
+// Resource Routes (CRUD) - tanpa parameter page
+Route::resource('pages/user', UserController::class)->names([
+    'index' => 'pages.user.index',
+    'create' => 'pages.user.create',
+    'store' => 'pages.user.store',
+    'show' => 'pages.user.show',
+    'edit' => 'pages.user.edit',
+    'update' => 'pages.user.update',
+    'destroy' => 'pages.user.destroy'
+]);
+
+Route::resource('pages/warga', WargaController::class)->names([
+    'index' => 'pages.warga.index',
+    'create' => 'pages.warga.create',
+    'store' => 'pages.warga.store',
+    'show' => 'pages.warga.show',
+    'edit' => 'pages.warga.edit',
+    'update' => 'pages.warga.update',
+    'destroy' => 'pages.warga.destroy'
+]);
+
+Route::resource('pages/fasilitas', FasilitasUmumController::class)->names([
+    'index' => 'pages.fasilitas.index',
+    'create' => 'pages.fasilitas.create',
+    'store' => 'pages.fasilitas.store',
+    'show' => 'pages.fasilitas.show',
+    'edit' => 'pages.fasilitas.edit',
+    'update' => 'pages.fasilitas.update',
+    'destroy' => 'pages.fasilitas.destroy'
+]);

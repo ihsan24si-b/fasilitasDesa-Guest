@@ -10,12 +10,12 @@ class UserController extends Controller
     public function index()
     {
         if (!session('admin_logged_in')) {
-            return redirect()->route('auth.index')
+            return redirect()->route('pages.auth.index')
                 ->with('error', 'Silakan login terlebih dahulu!');
         }
 
         $data['dataUser'] = User::all();
-        return view('user.index', $data);
+        return view('pages.user.index', $data);
     }
 
     public function create()
@@ -25,13 +25,13 @@ class UserController extends Controller
                 ->with('error', 'Silakan login terlebih dahulu!');
         }
 
-        return view('user.create');
+        return view('pages.user.create');
     }
 
     public function store(Request $request)
     {
         if (!session('admin_logged_in')) {
-            return redirect()->route('auth.index')
+            return redirect()->route('pages.auth.index')
                 ->with('error', 'Silakan login terlebih dahulu!');
         }
 
@@ -51,24 +51,24 @@ class UserController extends Controller
 
         User::create($data);
 
-        return redirect()->route('user.index')->with('success', 'Penambahan Data Berhasil!');
+        return redirect()->route('pages.user.index')->with('success', 'Penambahan Data Berhasil!');
     }
 
     public function edit(string $id)
     {
         if (!session('admin_logged_in')) {
-            return redirect()->route('auth.index')
+            return redirect()->route('pages.auth.index')
                 ->with('error', 'Silakan login terlebih dahulu!');
         }
 
         $data['dataUser'] = User::findOrFail($id);
-        return view('user.edit', $data);
+        return view('pages.user.edit', $data);
     }
 
     public function update(Request $request, string $id)
     {
         if (!session('admin_logged_in')) {
-            return redirect()->route('auth.index')
+            return redirect()->route('pages.auth.index')
                 ->with('error', 'Silakan login terlebih dahulu!');
         }
 
@@ -93,25 +93,25 @@ class UserController extends Controller
 
         $user->update($data);
 
-        return redirect()->route('user.index')->with('success', 'Perubahan Data Berhasil!');
+        return redirect()->route('pages.user.index')->with('success', 'Perubahan Data Berhasil!');
     }
 
     public function destroy(string $id)
     {
         if (!session('admin_logged_in')) {
-            return redirect()->route('auth.index')
+            return redirect()->route('pages.auth.index')
                 ->with('error', 'Silakan login terlebih dahulu!');
         }
 
         $user = User::findOrFail($id);
 
         if ($user->email === session('admin_email')) {
-            return redirect()->route('user.index')
+            return redirect()->route('pages.user.index')
                 ->with('error', 'Tidak dapat menghapus akun sendiri!');
         }
 
         $user->delete();
 
-        return redirect()->route('user.index')->with('success', 'Data berhasil dihapus');
+        return redirect()->route('pages.user.index')->with('success', 'Data berhasil dihapus');
     }
 }
