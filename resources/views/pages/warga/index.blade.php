@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.guest.app')
 
 @section('title', 'Ihsan - Data Warga')
 
@@ -76,7 +76,7 @@
                     </tbody>
                 </table>
             </div>
-            
+
             @if($dataWarga->count() > 0)
             <div class="mt-3 text-muted">
                 <small>Total: {{ $dataWarga->count() }} warga</small>

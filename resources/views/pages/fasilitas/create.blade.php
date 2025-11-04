@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.guest.app')
 
 @section('title', 'Ihsan - Tambah Warga')
 
@@ -119,7 +119,7 @@
             </form>
         </div>
     </div>
-    
+
 <!-- Tambah Fasilitas End -->
 @endsection
 

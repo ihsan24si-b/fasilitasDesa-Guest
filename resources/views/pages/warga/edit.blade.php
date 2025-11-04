@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.guest.app')
 
 @section('title', 'Ihsan - Edit Warga')
 
@@ -27,7 +27,7 @@
                         <div class="mb-4">
                             <label for="no_ktp" class="form-label">No KTP <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('no_ktp') is-invalid @enderror"
-                                   id="no_ktp" name="no_ktp" value="{{ old('no_ktp', $dataWarga->no_ktp) }}" 
+                                   id="no_ktp" name="no_ktp" value="{{ old('no_ktp', $dataWarga->no_ktp) }}"
                                    placeholder="Masukkan No KTP" required maxlength="16">
                             @error('no_ktp')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -37,7 +37,7 @@
                         <div class="mb-4">
                             <label for="nama" class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('nama') is-invalid @enderror"
-                                   id="nama" name="nama" value="{{ old('nama', $dataWarga->nama) }}" 
+                                   id="nama" name="nama" value="{{ old('nama', $dataWarga->nama) }}"
                                    placeholder="Masukkan nama lengkap" required maxlength="100">
                             @error('nama')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -79,7 +79,7 @@
                         <div class="mb-4">
                             <label for="pekerjaan" class="form-label">Pekerjaan <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('pekerjaan') is-invalid @enderror"
-                                   id="pekerjaan" name="pekerjaan" value="{{ old('pekerjaan', $dataWarga->pekerjaan) }}" 
+                                   id="pekerjaan" name="pekerjaan" value="{{ old('pekerjaan', $dataWarga->pekerjaan) }}"
                                    placeholder="Masukkan pekerjaan" required maxlength="50">
                             @error('pekerjaan')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -89,7 +89,7 @@
                         <div class="mb-4">
                             <label for="telp" class="form-label">No Telepon <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('telp') is-invalid @enderror"
-                                   id="telp" name="telp" value="{{ old('telp', $dataWarga->telp) }}" 
+                                   id="telp" name="telp" value="{{ old('telp', $dataWarga->telp) }}"
                                    placeholder="Masukkan nomor telepon" required maxlength="15">
                             @error('telp')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -99,7 +99,7 @@
                         <div class="mb-4">
                             <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
                             <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                   id="email" name="email" value="{{ old('email', $dataWarga->email) }}" 
+                                   id="email" name="email" value="{{ old('email', $dataWarga->email) }}"
                                    placeholder="Masukkan alamat email" required>
                             @error('email')
                                 <div class="invalid-feedback">{{ $message }}</div>

@@ -8,7 +8,7 @@
     <meta content="" name="keywords">
     <meta content="" name="description">
 
-    @include('layouts.css')
+    @include('layouts.guest.css')
 </head>
 
 <body>
@@ -21,17 +21,17 @@
     </div>
     <!-- Spinner End -->
 
-    @include('layouts.header')
+    @include('layouts..guest.header')
 
     <!-- Content -->
     @yield('content')
 
-    @include('layouts.footer')
+    @include('layouts..guest.footer')
 
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 
-    @include('layouts.js')
+    @include('layouts.guest.js')
 </body>
 
 </html>
