@@ -44,4 +44,3 @@ Route::resource('fasilitas', \App\Http\Controllers\FasilitasUmumController::clas
 Route::resource('user', \App\Http\Controllers\UserController::class);
 
 
-// Route untuk Auth

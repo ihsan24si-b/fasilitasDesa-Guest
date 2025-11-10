@@ -25,7 +25,7 @@ class HomepageController extends Controller
      */
     public function about()
     {
-        return view('homepage.about'); // atau return view('about');
+        return view('pages.about'); // atau return view('about');
     }
 
     /**

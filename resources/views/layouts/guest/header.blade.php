@@ -1,10 +1,10 @@
 <!-- Navbar Start -->
 <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
     <a href="{{ route('homepage') }}" class="navbar-brand d-flex d-lg-none me-4">
-        <h2 class="text-primary mb-0"><i class="fa fa-hashtag"></i></h2>
+        <h2 class="text-primary mb-0"><i data-feather="home"></i></h2>
     </a>
     <a href="#" class="sidebar-toggler flex-shrink-0">
-        <i class="fa fa-bars"></i>
+        <i data-feather="menu"></i>
     </a>
 
     <!-- Search Form -->
@@ -14,21 +14,31 @@
 
     <div class="navbar-nav align-items-center ms-auto">
         <!-- Navigation Menu -->
-        <div class="nav-item me-3" >
+        <div class="nav-item me-3">
             <div class="d-flex gap-3">
-                <a href="{{ route('homepage') }}" class="nav-link {{ request()->routeIs('homepage') ? 'text-primary' : '' }}">Home</a>
-                <a href="{{ route('warga.index') }}" class="nav-link {{ request()->routeIs('warga.*') ? 'text-primary' : '' }}">Data Warga</a>
-                <a href="{{ route('fasilitas.index') }}" class="nav-link {{ request()->routeIs('fasilitas.*') ? 'text-primary' : '' }}">Peminjaman Fasilitas</a>
-                <a href="{{ route('user.index') }}" class="nav-link {{ request()->routeIs('user.*') ? 'text-primary' : '' }}">Tambah Data</a>
-
+                <a href="{{ route('homepage') }}" class="nav-link {{ request()->routeIs('homepage') ? 'text-primary' : '' }}">
+                    <i data-feather="home" style="width: 16px; height: 16px;"></i> Home
+                </a>
+                <a href="{{ route('warga.index') }}" class="nav-link {{ request()->routeIs('warga.*') ? 'text-primary' : '' }}">
+                    <i data-feather="users" style="width: 16px; height: 16px;"></i> Data Warga
+                </a>
+                <a href="{{ route('fasilitas.index') }}" class="nav-link {{ request()->routeIs('fasilitas.*') ? 'text-primary' : '' }}">
+                    <i data-feather="calendar" style="width: 16px; height: 16px;"></i> Peminjaman Fasilitas
+                </a>
+                <a href="{{ route('user.index') }}" class="nav-link {{ request()->routeIs('user.*') ? 'text-primary' : '' }}">
+                    <i data-feather="plus-circle" style="width: 16px; height: 16px;"></i> Tambah Data
+                </a>
+                <a href="{{ url('/about') }}" class="nav-link {{ request()->is('about') ? 'text-primary' : '' }}">
+                    <i data-feather="info" style="width: 16px; height: 16px;"></i> About
+                </a>
             </div>
         </div>
 
         @if(session('admin_logged_in'))
             <!-- User is LOGGED IN -->
-            <div class="nav-item dropdown" >
+            <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class="fa fa-envelope me-lg-2"></i>
+                    <i data-feather="mail" style="width: 16px; height: 16px;"></i>
                     <span class="d-none d-lg-inline-flex">Message</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
@@ -38,7 +48,7 @@
 
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class="fa fa-bell me-lg-2"></i>
+                    <i data-feather="bell" style="width: 16px; height: 16px;"></i>
                     <span class="d-none d-lg-inline-flex">Notification</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
@@ -49,21 +59,23 @@
             <!-- User Profile Dropdown -->
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                    <img class="rounded-circle me-lg-2" src="{{ asset('assets/img/user.jpg') }}" alt="User" style="width: 40px; height: 40px;">
+                    <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center me-lg-2" style="width: 40px; height: 40px;">
+                        <i data-feather="user" class="text-white" style="width: 20px; height: 20px;"></i>
+                    </div>
                     <span class="d-none d-lg-inline-flex">{{ session('admin_username') ?? 'Admin' }}</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                     <a href="#" class="dropdown-item">
-                        <i class="fas fa-user me-2"></i>My Profile
+                        <i data-feather="user" style="width: 16px; height: 16px;"></i> My Profile
                     </a>
                     <a href="#" class="dropdown-item">
-                        <i class="fas fa-cog me-2"></i>Settings
+                        <i data-feather="settings" style="width: 16px; height: 16px;"></i> Settings
                     </a>
                     <div class="dropdown-divider"></div>
                     <form action="{{ route('auth.logout') }}" method="POST" class="d-inline">
                         @csrf
                         <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Yakin ingin logout?')">
-                            <i class="fas fa-sign-out-alt me-2"></i>Log Out
+                            <i data-feather="log-out" style="width: 16px; height: 16px;"></i> Log Out
                         </button>
                     </form>
                 </div>
@@ -73,10 +85,10 @@
             <div class="nav-item">
                 <div class="d-flex gap-2">
                     <a href="{{ route('auth.index') }}" class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-sign-in-alt me-1"></i>Login
+                        <i data-feather="log-in" style="width: 16px; height: 16px;"></i> Login
                     </a>
                     <a href="{{ route('auth.register') }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-user-plus me-1"></i>Register
+                        <i data-feather="user-plus" style="width: 16px; height: 16px;"></i> Register
                     </a>
                 </div>
             </div>
