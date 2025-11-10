@@ -17,7 +17,7 @@ class HomepageController extends Controller
         //                    ->with('error', 'Silakan login terlebih dahulu!');
         // }
 
-        return view('homepage');
+        return view('layouts.guest.homepage');
     }
 
     /**

@@ -15,7 +15,7 @@ class UserController extends Controller
         }
 
         $data['dataUser'] = User::all();
-        return view('user.index', $data);
+        return view('pages.user.index', $data);
     }
 
     public function create()
@@ -25,7 +25,7 @@ class UserController extends Controller
                 ->with('error', 'Silakan login terlebih dahulu!');
         }
 
-        return view('user.create');
+        return view('pages.user.create');
     }
 
     public function store(Request $request)

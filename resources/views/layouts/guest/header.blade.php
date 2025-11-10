@@ -6,41 +6,27 @@
     <a href="#" class="sidebar-toggler flex-shrink-0">
         <i class="fa fa-bars"></i>
     </a>
-    
+
     <!-- Search Form -->
     <form class="d-none d-md-flex ms-4">
         <input class="form-control border-0" type="search" placeholder="Search">
     </form>
-    
+
     <div class="navbar-nav align-items-center ms-auto">
         <!-- Navigation Menu -->
-        <div class="nav-item me-3">
+        <div class="nav-item me-3" >
             <div class="d-flex gap-3">
                 <a href="{{ route('homepage') }}" class="nav-link {{ request()->routeIs('homepage') ? 'text-primary' : '' }}">Home</a>
                 <a href="{{ route('warga.index') }}" class="nav-link {{ request()->routeIs('warga.*') ? 'text-primary' : '' }}">Data Warga</a>
-                <a href="{{ route('fasilitas.index') }}" class="nav-link {{ request()->routeIs('fasilitas.*') ? 'text-primary' : '' }}">Data Fasilitas</a>
-                <a href="{{ route('user.index') }}" class="nav-link {{ request()->routeIs('user.*') ? 'text-primary' : '' }}">Data User</a>
-                
-                <!-- Pages Dropdown -->
-                <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                        Pages
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                        <a href="{{ route('features') }}" class="dropdown-item">Features</a>
-                        <a href="{{ route('team') }}" class="dropdown-item">Our Team</a>
-                        <a href="{{ route('testimonial') }}" class="dropdown-item">Testimonial</a>
-                        <a href="{{ route('not-found') }}" class="dropdown-item">404 Page</a>
-                    </div>
-                </div>
-                
-                <a href="{{ route('contact') }}" class="nav-link {{ request()->routeIs('contact') ? 'text-primary' : '' }}">Contact</a>
+                <a href="{{ route('fasilitas.index') }}" class="nav-link {{ request()->routeIs('fasilitas.*') ? 'text-primary' : '' }}">Peminjaman Fasilitas</a>
+                <a href="{{ route('user.index') }}" class="nav-link {{ request()->routeIs('user.*') ? 'text-primary' : '' }}">Tambah Data</a>
+
             </div>
         </div>
 
         @if(session('admin_logged_in'))
             <!-- User is LOGGED IN -->
-            <div class="nav-item dropdown">
+            <div class="nav-item dropdown" >
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                     <i class="fa fa-envelope me-lg-2"></i>
                     <span class="d-none d-lg-inline-flex">Message</span>

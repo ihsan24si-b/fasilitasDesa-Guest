@@ -10,9 +10,10 @@ use App\Http\Controllers\HomepageController;
 
 
 
-Route::get('/', function () {
-    return view('homepage');
+Route::get('/', function () {return view('layouts.guest.homepage');
 });
+
+
 
 
 
