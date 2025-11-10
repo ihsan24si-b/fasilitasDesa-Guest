@@ -31,6 +31,14 @@
 
     @include('layouts.guest.js')
 
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/6285836124648?text=Halo%20admin,%20saya%20ingin%20bertanya%20tentang%20sistem%20management%20warga%20ini"
+       class="whatsapp-float"
+       target="_blank"
+       title="Hubungi kami via WhatsApp">
+        <i data-feather="message-circle"></i>
+    </a>
+
     <!-- Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
     <script>
