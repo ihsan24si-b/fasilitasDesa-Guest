@@ -17,4 +17,10 @@ class FasilitasUmum extends Model
         'kapasitas',
         'deskripsi',
     ];
+
+    // TAMBAHKAN RELASI INI
+    public function syaratFasilitas()
+    {
+        return $this->hasMany(SyaratFasilitas::class, 'fasilitas_id');
+    }
 }

@@ -1,117 +1,114 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\FasilitasUmum;
+use App\Models\SyaratFasilitas;
 use Illuminate\Http\Request;
 
 class FasilitasUmumController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $data['dataFasilitas'] = FasilitasUmum::all();
-        return view('pages.fasilitas.index', $data);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
+public function index()
+{
+    $data['dataFasilitas'] = FasilitasUmum::with('syaratFasilitas')->get();
+    return view('pages.fasilitas.index', $data);
+}
     public function create()
     {
         return view('pages.fasilitas.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama' => 'required|max:100',
-            'jenis' => 'required|in:aula,lapangan,gedung,taman,lainnya',
-            'alamat' => 'required',
-            'rt' => 'required|max:3',
-            'rw' => 'required|max:3',
-            'kapasitas' => 'required|integer|min:1',
-            'deskripsi' => 'nullable',
-        ], [
-            'nama.required' => 'Nama fasilitas wajib diisi',
-            'jenis.required' => 'Jenis fasilitas wajib dipilih',
-            'alamat.required' => 'Alamat wajib diisi',
-            'rt.required' => 'RT wajib diisi',
-            'rw.required' => 'RW wajib diisi',
-            'kapasitas.required' => 'Kapasitas wajib diisi',
-            'kapasitas.integer' => 'Kapasitas harus berupa angka',
-            'kapasitas.min' => 'Kapasitas minimal 1',
+            'nama'               => 'required|max:100',
+            'jenis'              => 'required|in:aula,lapangan,gedung,taman,lainnya',
+            'alamat'             => 'required',
+            'rt'                 => 'required|max:3',
+            'rw'                 => 'required|max:3',
+            'kapasitas'          => 'required|integer|min:1',
+            'deskripsi'          => 'nullable',
+            'syarat_nama'        => 'sometimes|array',
+            'syarat_nama.*'      => 'required|string|max:200',
+            'syarat_deskripsi'   => 'sometimes|array',
+            'syarat_deskripsi.*' => 'nullable|string',
         ]);
 
-        FasilitasUmum::create($validated);
+        // Create fasilitas
+        $fasilitas = FasilitasUmum::create($validated);
+
+        // Create syarat-syarat jika ada
+        if ($request->has('syarat_nama')) {
+            foreach ($request->syarat_nama as $index => $namaSyarat) {
+                SyaratFasilitas::create([
+                    'fasilitas_id' => $fasilitas->fasilitas_id,
+                    'nama_syarat'  => $namaSyarat,
+                    'deskripsi'    => $request->syarat_deskripsi[$index] ?? null,
+                ]);
+            }
+        }
 
         return redirect()->route('pages.fasilitas.index')
-            ->with('success', 'Data fasilitas berhasil ditambahkan!');
+            ->with('success', 'Data fasilitas beserta syarat berhasil ditambahkan!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        //
+        $data['fasilitas'] = FasilitasUmum::with('syaratFasilitas')->findOrFail($id);
+        return view('pages.fasilitas.show', $data);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        $data['dataFasilitas'] = FasilitasUmum::findOrFail($id);
+        $data['dataFasilitas'] = FasilitasUmum::with('syaratFasilitas')->findOrFail($id);
         return view('pages.fasilitas.edit', $data);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         $fasilitas = FasilitasUmum::findOrFail($id);
 
         $validated = $request->validate([
-            'nama' => 'required|max:100',
-            'jenis' => 'required|in:aula,lapangan,gedung,taman,lainnya',
-            'alamat' => 'required',
-            'rt' => 'required|max:3',
-            'rw' => 'required|max:3',
-            'kapasitas' => 'required|integer|min:1',
-            'deskripsi' => 'nullable',
-        ], [
-            'nama.required' => 'Nama fasilitas wajib diisi',
-            'jenis.required' => 'Jenis fasilitas wajib dipilih',
-            'alamat.required' => 'Alamat wajib diisi',
-            'rt.required' => 'RT wajib diisi',
-            'rw.required' => 'RW wajib diisi',
-            'kapasitas.required' => 'Kapasitas wajib diisi',
-            'kapasitas.integer' => 'Kapasitas harus berupa angka',
-            'kapasitas.min' => 'Kapasitas minimal 1',
+            'nama'               => 'required|max:100',
+            'jenis'              => 'required|in:aula,lapangan,gedung,taman,lainnya',
+            'alamat'             => 'required',
+            'rt'                 => 'required|max:3',
+            'rw'                 => 'required|max:3',
+            'kapasitas'          => 'required|integer|min:1',
+            'deskripsi'          => 'nullable',
+            'syarat_nama'        => 'sometimes|array',
+            'syarat_nama.*'      => 'required|string|max:200',
+            'syarat_deskripsi'   => 'sometimes|array',
+            'syarat_deskripsi.*' => 'nullable|string',
         ]);
 
+        // Update fasilitas
         $fasilitas->update($validated);
 
+        // Hapus syarat lama dan buat yang baru
+        if ($request->has('syarat_nama')) {
+            // Hapus syarat lama
+            $fasilitas->syaratFasilitas()->delete();
+
+            // Buat syarat baru
+            foreach ($request->syarat_nama as $index => $namaSyarat) {
+                SyaratFasilitas::create([
+                    'fasilitas_id' => $fasilitas->fasilitas_id,
+                    'nama_syarat'  => $namaSyarat,
+                    'deskripsi'    => $request->syarat_deskripsi[$index] ?? null,
+                ]);
+            }
+        }
+
         return redirect()->route('pages.fasilitas.index')
-            ->with('success', 'Data fasilitas berhasil diubah!');
+            ->with('success', 'Data fasilitas beserta syarat berhasil diubah!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $fasilitas = FasilitasUmum::findOrFail($id);
-        $fasilitas->delete();
+        $fasilitas->delete(); // Syarat akan terhapus otomatis karena cascade
 
         return redirect()->route('pages.fasilitas.index')
-            ->with('success', 'Data fasilitas berhasil dihapus!');
+            ->with('success', 'Data fasilitas beserta syarat berhasil dihapus!');
     }
 }

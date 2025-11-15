@@ -54,3 +54,4 @@ Route::resource('pages/fasilitas', FasilitasUmumController::class)->names([
     'update' => 'pages.fasilitas.update',
     'destroy' => 'pages.fasilitas.destroy'
 ]);
+

@@ -102,6 +102,74 @@
                 </div>
             </div>
 
+            {{-- ================================ --}}
+            {{-- SECTION BARU: SYARAT FASILITAS --}}
+            {{-- ================================ --}}
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card border-primary">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-list-check me-2"></i>Syarat Penggunaan Fasilitas
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="syarat-container">
+                                {{-- Syarat akan ditambahkan dinamis di sini --}}
+                                @php
+                                    $syaratCount = 0;
+                                @endphp
+                                @foreach($dataFasilitas->syaratFasilitas as $syarat)
+                                <div class="border rounded p-3 mb-3 syarat-item" id="syarat-{{ ++$syaratCount }}">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="mb-3">
+                                                <label class="form-label">Nama Syarat <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control"
+                                                       name="syarat_nama[]"
+                                                       value="{{ old('syarat_nama.' . ($syaratCount-1), $syarat->nama_syarat) }}"
+                                                       placeholder="Contoh: Membawa KTP asli"
+                                                       required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Deskripsi Syarat</label>
+                                                <textarea class="form-control"
+                                                          name="syarat_deskripsi[]"
+                                                          rows="1"
+                                                          placeholder="Deskripsi lengkap syarat (opsional)">{{ old('syarat_deskripsi.' . ($syaratCount-1), $syarat->deskripsi) }}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="mb-3">
+                                                <label class="form-label">&nbsp;</label>
+                                                <button type="button" class="btn btn-danger btn-block"
+                                                        onclick="hapusSyarat({{ $syaratCount }})">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+
+                            <button type="button" class="btn btn-outline-primary btn-sm mt-3" onclick="tambahSyarat()">
+                                <i class="fas fa-plus me-1"></i>Tambah Syarat
+                            </button>
+
+                            @error('syarat_nama.*')
+                                <div class="text-danger small mt-2">{{ $message }}</div>
+                            @enderror
+                            @error('syarat_deskripsi.*')
+                                <div class="text-danger small mt-2">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="row mt-4">
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary">
@@ -117,3 +185,64 @@
 </div>
 <!-- Edit Fasilitas End -->
 @endsection
+
+@push('scripts')
+<script>
+let syaratCount = {{ $syaratCount ?? 0 }};
+
+function tambahSyarat() {
+    syaratCount++;
+    const container = document.getElementById('syarat-container');
+
+    const syaratHtml = `
+        <div class="border rounded p-3 mb-3 syarat-item" id="syarat-${syaratCount}">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="mb-3">
+                        <label class="form-label">Nama Syarat <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control"
+                               name="syarat_nama[]"
+                               placeholder="Contoh: Membawa KTP asli"
+                               required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Deskripsi Syarat</label>
+                        <textarea class="form-control"
+                                  name="syarat_deskripsi[]"
+                                  rows="1"
+                                  placeholder="Deskripsi lengkap syarat (opsional)"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="mb-3">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="button" class="btn btn-danger btn-block"
+                                onclick="hapusSyarat(${syaratCount})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    container.insertAdjacentHTML('beforeend', syaratHtml);
+}
+
+function hapusSyarat(id) {
+    const element = document.getElementById(`syarat-${id}`);
+    if (element) {
+        element.remove();
+    }
+}
+
+// Jika tidak ada syarat, tambah satu secara otomatis
+document.addEventListener('DOMContentLoaded', function() {
+    if (syaratCount === 0) {
+        tambahSyarat();
+    }
+});
+</script>
+@endpush

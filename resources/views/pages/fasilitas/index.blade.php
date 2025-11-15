@@ -35,6 +35,7 @@
                         <th scope="col">Alamat</th>
                         <th scope="col">RT/RW</th>
                         <th scope="col">Kapasitas</th>
+                        <th scope="col">Jumlah Syarat</th>
                         <th scope="col">Aksi</th>
                     </tr>
                 </thead>
@@ -60,16 +61,33 @@
                         <td>{{ $item->rt }}/{{ $item->rw }}</td>
                         <td>{{ $item->kapasitas }} orang</td>
                         <td>
-                            <a href="{{ route('pages.fasilitas.edit', $item->fasilitas_id) }}" class="btn btn-warning btn-sm">
-                                <i class="fas fa-edit me-1"></i>Edit
-                            </a>
-                            <form action="{{ route('pages.fasilitas.destroy', $item->fasilitas_id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus fasilitas ini?')">
-                                    <i class="fas fa-trash me-1"></i>Hapus
-                                </button>
-                            </form>
+                            <span class="badge bg-info">{{ $item->syaratFasilitas->count() }} syarat</span>
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="{{ route('pages.fasilitas.show', $item->fasilitas_id) }}"
+                                   class="btn btn-info btn-sm"
+                                   title="Lihat Detail">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ route('pages.fasilitas.edit', $item->fasilitas_id) }}"
+                                   class="btn btn-warning btn-sm"
+                                   title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form action="{{ route('pages.fasilitas.destroy', $item->fasilitas_id) }}"
+                                      method="POST"
+                                      class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                            class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Yakin ingin menghapus fasilitas ini?')"
+                                            title="Hapus">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @endforeach
