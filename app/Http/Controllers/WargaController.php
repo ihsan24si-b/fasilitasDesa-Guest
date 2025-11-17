@@ -29,25 +29,20 @@ class WargaController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'no_ktp' => 'required|unique:warga|max:16',
-            'nama' => 'required|max:100',
-            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-            'agama' => 'required|in:Islam,Kristen,Katolik,Hindu,Buddha,Konghucu',
-            'pekerjaan' => 'required|max:50',
-            'telp' => 'required|max:15',
-            'email' => 'required|email|unique:warga',
-        ], [
-            'no_ktp.required' => 'No KTP wajib diisi',
-            'no_ktp.unique' => 'No KTP tidak valid',
-            'nama.required' => 'Nama wajib diisi',
-            'email.unique' => 'Email sudah terdaftar',
-        ]);
+         $request->validate([
+        'no_ktp' => 'required',
+        'nama_lengkap' => 'required',
+        'jenis_kelamin' => 'required',
+        'agama' => 'required',
+        'pekerjaan' => 'required',
+        'no_telepon' => 'required',
+        'email' => 'required',
+        'fasilitas_id' => 'required|exists:fasilitas_umum,id',
+    ]);
 
-        Warga::create($validated);
+    Warga::create($request->all());
 
-        return redirect()->route('warga.index')
-            ->with('success', 'Data warga berhasil ditambahkan!');
+    return redirect()->route('warga.index')->with('success', 'Data warga berhasil ditambahkan');
     }
 
     /**

@@ -12,16 +12,24 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('warga', function (Blueprint $table) {
-            $table->id('warga_id');
-            $table->string('no_ktp', 16)->unique();
-            $table->string('nama', 100);
-            $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
-            $table->string('agama', 20);
-            $table->string('pekerjaan', 50);
-            $table->string('telp', 15);
-            $table->string('email', 100);
-            $table->timestamps();
-        });
+        $table->id();
+        $table->string('no_ktp')->unique();
+        $table->string('nama_lengkap');
+        $table->enum('jenis_kelamin', ['L','P']);
+        $table->string('agama');
+        $table->string('pekerjaan');
+        $table->string('no_telepon');
+        $table->string('email');
+
+        // foreign key
+        $table->unsignedBigInteger('fasilitas_id');
+        $table->foreign('fasilitas_id')
+              ->references('id')
+              ->on('fasilitas_umum')
+              ->onDelete('cascade');
+
+        $table->timestamps();
+    });
     }
 
     /**

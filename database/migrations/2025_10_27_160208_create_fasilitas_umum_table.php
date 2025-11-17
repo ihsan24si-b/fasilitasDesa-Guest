@@ -10,19 +10,19 @@ return new class extends Migration
     {
         // Hapus tabel lama jika ada
         Schema::dropIfExists('fasilitas_umum');
-        
+
         // Buat tabel baru dengan struktur yang benar
         Schema::create('fasilitas_umum', function (Blueprint $table) {
-            $table->id('fasilitas_id'); // Primary key auto increment
-            $table->string('nama', 100);
-            $table->enum('jenis', ['aula', 'lapangan', 'gedung', 'taman', 'lainnya']);
-            $table->text('alamat');
-            $table->string('rt', 3);
-            $table->string('rw', 3);
-            $table->integer('kapasitas');
-            $table->text('deskripsi')->nullable();
-            $table->timestamps(); // created_at & updated_at
-        });
+        $table->id();
+        $table->string('nama_fasilitas');
+        $table->string('jenis_fasilitas');
+        $table->integer('rt');
+        $table->integer('rw');
+        $table->integer('kapasitas');
+        $table->text('alamat');
+        $table->text('deskripsi')->nullable();
+        $table->timestamps();
+    });
     }
 
     public function down()

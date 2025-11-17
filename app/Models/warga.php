@@ -7,18 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Warga extends Model
 {
-    use HasFactory;
-
     protected $table = 'warga';
-    protected $primaryKey = 'warga_id';
-    
+
     protected $fillable = [
-        'no_ktp',
-        'nama',
-        'jenis_kelamin',
-        'agama',
-        'pekerjaan',
-        'telp',
-        'email'
+        'no_ktp','nama_lengkap','jenis_kelamin','agama',
+        'pekerjaan','no_telepon','email','fasilitas_id'
     ];
+
+    public function fasilitas()
+    {
+        return $this->belongsTo(FasilitasUmum::class, 'fasilitas_id');
+    }
 }
