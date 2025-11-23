@@ -7,16 +7,26 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index()
-    {
-        if (!session('admin_logged_in')) {
-            return redirect()->route('pages.auth.index')
-                ->with('error', 'Silakan login terlebih dahulu!');
-        }
-
-        $data['dataUser'] = User::all();
-        return view('pages.user.index', $data);
+    public function index(Request $request)
+{
+    if (!session('admin_logged_in')) {
+        return redirect()->route('pages.auth.index')
+            ->with('error', 'Silakan login terlebih dahulu!');
     }
+
+    $search = $request->get('search');
+    $perPage = $request->get('perPage', 10); // Default 10
+
+    $dataUser = User::when($search, function($query) use ($search) {
+                return $query->search($search);
+            })
+            ->orderBy('id', 'desc')
+            ->paginate($perPage)
+            ->appends($request->all());
+
+    return view('pages.user.index', compact('dataUser', 'search', 'perPage'));
+}
+
 
     public function create()
     {

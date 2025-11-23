@@ -9,12 +9,24 @@ class WargaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $data['dataWarga'] = Warga::all();
-        return view('pages.warga.index', $data);
-    }
+    public function index(Request $request)
+{
+    $search = $request->get('search');
+    $filters = $request->only(['jenis_kelamin', 'agama', 'pekerjaan']);
+    $perPage = $request->get('perPage', 10); // Default 10
 
+    $dataWarga = Warga::when($search, function($query) use ($search) {
+                return $query->search($search);
+            })
+            ->when($filters, function($query) use ($filters) {
+                return $query->filter($filters);
+            })
+            ->orderBy('warga_id', 'desc')
+            ->paginate($perPage)
+            ->appends($request->all()); // Pertahankan semua parameter
+
+    return view('pages.warga.index', compact('dataWarga', 'filters', 'search', 'perPage'));
+}
     /**
      * Show the form for creating a new resource.
      */
@@ -104,3 +116,5 @@ class WargaController extends Controller
         return redirect()->route('pages.warga.index')->with('success', 'Data warga berhasil dihapus');
     }
 }
+
+

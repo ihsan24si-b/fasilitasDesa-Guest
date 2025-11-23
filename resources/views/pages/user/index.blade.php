@@ -30,7 +30,44 @@
         </div>
     @endif
 
-    <div class="bg-light text-center rounded p-4">
+    <div class="bg-light rounded p-4">
+        <!-- Search Form -->
+        <form method="GET" action="{{ route('pages.user.index') }}" class="mb-4">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control"
+                               value="{{ request('search') }}" placeholder="Cari nama atau email...">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Show Entries & Reset -->
+                <div class="col-md-6">
+                    <div class="row g-2 justify-content-end">
+                        <div class="col-md-3">
+                            <select name="perPage" class="form-select" onchange="this.form.submit()">
+                                <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
+                                <option value="20" {{ $perPage == 20 ? 'selected' : '' }}>20</option>
+                                <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
+                                <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{ route('pages.user.index') }}" class="btn btn-secondary w-100">Reset</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Info Showing -->
+        <div class="mb-3 text-muted">
+            Menampilkan {{ $dataUser->firstItem() ?? 0 }} - {{ $dataUser->lastItem() ?? 0 }} dari {{ $dataUser->total() }} data
+        </div>
+
         <div class="table-responsive">
             <table class="table text-start align-middle table-bordered table-hover mb-0">
                 <thead>
@@ -38,35 +75,42 @@
                         <th scope="col">No</th>
                         <th scope="col">Nama</th>
                         <th scope="col">Email</th>
-                        <th scope="col">Password</th>
                         <th scope="col">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($dataUser as $item)
+                    @forelse ($dataUser as $item)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $loop->iteration + (($dataUser->currentPage() - 1) * $dataUser->perPage()) }}</td>
                         <td>{{ $item->name }}</td>
                         <td>{{ $item->email }}</td>
                         <td>
-                            <small class="text-muted">{{ substr($item->password, 0, 20) }}...</small>
-                        </td>
-                        <td>
-                            <a href="{{ route('pages.user.edit', $item->id) }}" class="btn btn-warning btn-sm">
-                                <i class="fas fa-edit me-1"></i>Edit
-                            </a>
-                            <form action="{{ route('pages.user.destroy', $item->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus user ini?')">
-                                    <i class="fas fa-trash me-1"></i>Hapus
-                                </button>
-                            </form>
+                            <div class="btn-group" role="group">
+                                <a href="{{ route('pages.user.edit', $item->id) }}" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit me-1"></i>Edit
+                                </a>
+                                <form action="{{ route('pages.user.destroy', $item->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus user ini?')">
+                                        <i class="fas fa-trash me-1"></i>Hapus
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="4" class="text-center">Tidak ada data ditemukan</td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-3">
+            {{ $dataUser->links('pagination::bootstrap-5') }}
         </div>
     </div>
 </div>

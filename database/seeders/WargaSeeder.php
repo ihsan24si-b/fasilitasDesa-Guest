@@ -2,37 +2,45 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Warga;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
 
 class WargaSeeder extends Seeder
 {
-    public function run()
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
     {
-        $faker = \Faker\Factory::create('id_ID');
+        $faker = Faker::create('id_ID');
 
-        // Generate 15 warga random DENGAN BATAS PANJANG
-        foreach (range(1, 15) as $index) {
+        $agama = ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'];
+        $pekerjaan = ['PNS', 'Wiraswasta', 'Petani', 'Guru', 'Dokter', 'Perawat', 'Karyawan Swasta', 'Mahasiswa', 'Pelajar', 'Ibu Rumah Tangga', 'Buruh', 'Pengusaha', 'Seniman', 'Pensiunan'];
+
+        // HAPUS DATA DENGAN CARA YANG AMAN
+        Warga::query()->delete();
+
+        for ($i = 1; $i <= 100; $i++) {
+            $jenisKelamin = $faker->randomElement(['Laki-laki', 'Perempuan']);
+            $nama = $jenisKelamin === 'Laki-laki' ? $faker->firstNameMale() : $faker->firstNameFemale();
+            $nama .= ' ' . $faker->lastName();
+
+            // Generate telepon yang pasti sesuai (12 digit)
+            $telp = '08' . str_pad($i, 10, '0', STR_PAD_LEFT);
+
             Warga::create([
-                'no_ktp' => $faker->unique()->numerify('32##############'), // 16 digit
-                'nama' => $faker->firstName . ' ' . $faker->lastName, // Nama lebih pendek
-                'jenis_kelamin' => $faker->randomElement(['Laki-laki', 'Perempuan']),
-                'agama' => $faker->randomElement(['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha']),
-                'pekerjaan' => $faker->randomElement(['PNS', 'Wirausaha', 'Karyawan', 'Petani', 'IRT', 'Guru', 'Dokter']),
-                'telp' => $faker->numerify('08##########'), // Maksimal 12 karakter
-                'email' => $faker->userName . '@desa.id', // Email lebih pendek
+                'no_ktp' => '32' . str_pad($i, 14, '0', STR_PAD_LEFT), // 16 digit
+                'nama' => $nama,
+                'jenis_kelamin' => $jenisKelamin,
+                'agama' => $faker->randomElement($agama),
+                'pekerjaan' => $faker->randomElement($pekerjaan),
+                'telp' => $telp,
+                'email' => $faker->unique()->safeEmail(),
             ]);
         }
 
-        // Data khusus untuk demo
-        Warga::create([
-            'no_ktp' => '3273010101010001',
-            'nama' => 'Budi Santoso',
-            'jenis_kelamin' => 'Laki-laki',
-            'agama' => 'Islam',
-            'pekerjaan' => 'PNS',
-            'telp' => '08123456789',
-            'email' => 'budi@desa.id',
-        ]);
+        $this->command->info('Seeder Warga berhasil! Total: ' . Warga::count() . ' data.');
     }
 }

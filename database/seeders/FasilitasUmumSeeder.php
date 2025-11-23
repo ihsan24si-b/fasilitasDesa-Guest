@@ -2,42 +2,70 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\FasilitasUmum;
 use App\Models\SyaratFasilitas;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
 
 class FasilitasUmumSeeder extends Seeder
 {
-    public function run()
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
     {
-        $faker = \Faker\Factory::create('id_ID');
+        $faker = Faker::create('id_ID');
 
-        // Generate 8 fasilitas random DENGAN BATAS PANJANG
-        foreach (range(1, 8) as $index) {
+        $jenis = ['aula', 'lapangan', 'gedung', 'taman', 'lainnya'];
+        $namaFasilitas = [
+            'aula' => ['Aula Serba Guna', 'Aula Kelurahan', 'Aula Pertemuan', 'Balai Warga'],
+            'lapangan' => ['Lapangan Bola', 'Lapangan Voli', 'Lapangan Badminton', 'Lapangan Basket'],
+            'gedung' => ['Gedung Serbaguna', 'Gedung Olahraga', 'Gedung Pertemuan', 'Gedung Kesenian'],
+            'taman' => ['Taman Bermain', 'Taman Kota', 'Taman Rekreasi', 'Taman Hijau'],
+            'lainnya' => ['Pos Kamling', 'Kantor RW', 'Perpustakaan', 'Ruang Kesehatan']
+        ];
+
+        $syaratContoh = [
+            ['Membawa KTP Asli', 'Wajib menunjukkan KTP asli untuk verifikasi'],
+            ['Booking Minimal 3 Hari', 'Pemesanan harus dilakukan minimal 3 hari sebelum acara'],
+            ['DP 50%', 'Membayar uang muka 50% dari total biaya sewa'],
+            ['Surat Izin RT/RW', 'Membawa surat izin dari ketua RT dan RW setempat'],
+            ['Membayar Kebersihan', 'Membayar biaya kebersihan sebesar Rp 50.000'],
+            ['Mengisi Formulir', 'Mengisi formulir peminjaman yang disediakan'],
+        ];
+
+        // HAPUS DATA DENGAN CARA YANG AMAN (bukan truncate)
+        SyaratFasilitas::query()->delete(); // Hapus dulu child table
+        FasilitasUmum::query()->delete();   // Baru hapus parent table
+
+        for ($i = 1; $i <= 100; $i++) {
+            $jenisFasilitas = $faker->randomElement($jenis);
+            $nama = $faker->randomElement($namaFasilitas[$jenisFasilitas]) . ' ' . $faker->city();
+
             $fasilitas = FasilitasUmum::create([
-                'nama' => $faker->randomElement(['Aula', 'Lapangan', 'Gedung', 'Taman']) . ' ' . $faker->firstName,
-                'jenis' => $faker->randomElement(['aula', 'lapangan', 'gedung', 'taman']),
-                'alamat' => 'Jl. ' . $faker->streetName, // Alamat lebih pendek
-                'rt' => $faker->numerify('0#'),
-                'rw' => $faker->numerify('0#'),
-                'kapasitas' => $faker->numberBetween(20, 100),
-                'deskripsi' => $faker->sentence(3), // Deskripsi lebih pendek
+                'nama' => $nama,
+                'jenis' => $jenisFasilitas,
+                'alamat' => 'Jl. ' . $faker->streetName() . ' No.' . $faker->buildingNumber() . ', ' . $faker->city(),
+                'rt' => str_pad($faker->numberBetween(1, 10), 2, '0', STR_PAD_LEFT),
+                'rw' => str_pad($faker->numberBetween(1, 5), 2, '0', STR_PAD_LEFT),
+                'kapasitas' => $faker->numberBetween(50, 500),
+                'deskripsi' => $faker->paragraph(2),
             ]);
 
-            // Generate 2-3 syarat untuk setiap fasilitas
-            foreach (range(1, $faker->numberBetween(2, 3)) as $syaratIndex) {
+            // Tambahkan 2-4 syarat random untuk setiap fasilitas
+            $jumlahSyarat = $faker->numberBetween(2, 4);
+            $syaratTerpilih = $faker->randomElements($syaratContoh, $jumlahSyarat);
+
+            foreach ($syaratTerpilih as $syarat) {
                 SyaratFasilitas::create([
                     'fasilitas_id' => $fasilitas->fasilitas_id,
-                    'nama_syarat' => $faker->randomElement([
-                        'Bawa KTP',
-                        'Bayar Deposit',
-                        'Bersihkan',
-                        'Surat Permohonan',
-                        'Booking 7 Hari'
-                    ]), // Syarat lebih pendek
-                    'deskripsi' => $faker->sentence(2), // Deskripsi lebih pendek
+                    'nama_syarat' => $syarat[0],
+                    'deskripsi' => $syarat[1],
                 ]);
             }
         }
+
+        $this->command->info('Seeder Fasilitas Umum berhasil! Total: ' . FasilitasUmum::count() . ' data.');
     }
 }

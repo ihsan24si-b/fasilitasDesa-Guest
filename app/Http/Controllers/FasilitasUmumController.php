@@ -7,11 +7,25 @@ use Illuminate\Http\Request;
 
 class FasilitasUmumController extends Controller
 {
-public function index()
-{
-    $data['dataFasilitas'] = FasilitasUmum::with('syaratFasilitas')->get();
-    return view('pages.fasilitas.index', $data);
-}
+    public function index(Request $request)
+    {
+        $search  = $request->get('search');
+        $filters = $request->only(['jenis', 'rt', 'rw']);
+        $perPage = $request->get('perPage', 10); // Default 10
+
+        $dataFasilitas = FasilitasUmum::with('syaratFasilitas')
+            ->when($search, function ($query) use ($search) {
+                return $query->search($search);
+            })
+            ->when($filters, function ($query) use ($filters) {
+                return $query->filter($filters);
+            })
+            ->orderBy('fasilitas_id', 'desc')
+            ->paginate($perPage)
+            ->appends($request->all());
+
+        return view('pages.fasilitas.index', compact('dataFasilitas', 'filters', 'search', 'perPage'));
+    }
     public function create()
     {
         return view('pages.fasilitas.create');
