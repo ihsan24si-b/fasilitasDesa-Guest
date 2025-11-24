@@ -7,15 +7,24 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         if (!session('admin_logged_in')) {
             return redirect()->route('auth.index')
                 ->with('error', 'Silakan login terlebih dahulu!');
         }
 
-        $data['dataUser'] = User::all();
-        return view('pages.user.index', $data);
+        $search = $request->get('search');
+        $perPage = $request->get('perPage', 10);
+
+        $dataUser = User::when($search, function($query) use ($search) {
+                return $query->search($search);
+            })
+            ->orderBy('id', 'desc')
+            ->paginate($perPage)
+            ->appends($request->all());
+
+        return view('pages.user.index', compact('dataUser', 'search', 'perPage'));
     }
 
     public function create()
@@ -39,14 +48,12 @@ class UserController extends Controller
             'name' => 'required|max:100',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed',
-            // HAPUS VALIDASI ROLE
         ]);
 
         $data = [
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            // HAPUS ROLE DARI DATA
         ];
 
         User::create($data);
@@ -62,7 +69,7 @@ class UserController extends Controller
         }
 
         $data['dataUser'] = User::findOrFail($id);
-        return view('user.edit', $data);
+        return view('pages.user.edit', $data);
     }
 
     public function update(Request $request, string $id)
@@ -78,13 +85,11 @@ class UserController extends Controller
             'name' => 'required|max:100',
             'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'nullable|min:8|confirmed',
-            // HAPUS VALIDASI ROLE
         ]);
 
         $data = [
             'name' => $request->name,
             'email' => $request->email,
-            // HAPUS ROLE DARI DATA UPDATE
         ];
 
         if ($request->filled('password')) {

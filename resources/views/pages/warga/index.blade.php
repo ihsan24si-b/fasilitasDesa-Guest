@@ -25,7 +25,78 @@
             </div>
         @endif
 
-        <!-- Card View untuk Guest -->
+        <!-- Filter & Search Section -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form action="{{ route('warga.index') }}" method="GET">
+                    <div class="row g-3">
+                        <!-- Search -->
+                        <div class="col-md-4">
+                            <label for="search" class="form-label">Pencarian</label>
+                            <input type="text" class="form-control" id="search" name="search"
+                                   value="{{ $search }}" placeholder="Cari nama, no KTP, email, telepon...">
+                        </div>
+
+                        <!-- Filter Jenis Kelamin -->
+                        <div class="col-md-2">
+                            <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
+                            <select class="form-select" id="jenis_kelamin" name="jenis_kelamin">
+                                <option value="">Semua</option>
+                                <option value="Laki-laki" {{ ($filters['jenis_kelamin'] ?? '') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                                <option value="Perempuan" {{ ($filters['jenis_kelamin'] ?? '') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                            </select>
+                        </div>
+
+                        <!-- Filter Agama -->
+                        <div class="col-md-2">
+                            <label for="agama" class="form-label">Agama</label>
+                            <select class="form-select" id="agama" name="agama">
+                                <option value="">Semua</option>
+                                <option value="Islam" {{ ($filters['agama'] ?? '') == 'Islam' ? 'selected' : '' }}>Islam</option>
+                                <option value="Kristen" {{ ($filters['agama'] ?? '') == 'Kristen' ? 'selected' : '' }}>Kristen</option>
+                                <option value="Katolik" {{ ($filters['agama'] ?? '') == 'Katolik' ? 'selected' : '' }}>Katolik</option>
+                                <option value="Hindu" {{ ($filters['agama'] ?? '') == 'Hindu' ? 'selected' : '' }}>Hindu</option>
+                                <option value="Buddha" {{ ($filters['agama'] ?? '') == 'Buddha' ? 'selected' : '' }}>Buddha</option>
+                                <option value="Konghucu" {{ ($filters['agama'] ?? '') == 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
+                            </select>
+                        </div>
+
+                        <!-- Filter Pekerjaan -->
+                        <div class="col-md-2">
+                            <label for="pekerjaan" class="form-label">Pekerjaan</label>
+                            <input type="text" class="form-control" id="pekerjaan" name="pekerjaan"
+                                   value="{{ $filters['pekerjaan'] ?? '' }}" placeholder="Pekerjaan...">
+                        </div>
+
+                        <!-- Items Per Page -->
+                        <div class="col-md-2">
+                            <label for="perPage" class="form-label">Item per Halaman</label>
+                            <select class="form-select" id="perPage" name="perPage">
+                                <option value="5" {{ $perPage == 5 ? 'selected' : '' }}>5</option>
+                                <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
+                                <option value="20" {{ $perPage == 20 ? 'selected' : '' }}>20</option>
+                                <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i data-feather="filter"></i> Terapkan Filter
+                                </button>
+                                <a href="{{ route('warga.index') }}" class="btn btn-secondary">
+                                    <i data-feather="refresh-cw"></i> Reset
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Data Warga Cards -->
         <div class="row">
             @forelse ($dataWarga as $item)
             <div class="col-md-6 col-lg-4 mb-4">
@@ -61,21 +132,16 @@
                     </div>
                     <div class="card-footer bg-light">
                         <div class="d-flex justify-content-between">
-                            <a href="{{ route('warga.show', $item->warga_id) }}" class="btn btn-info btn-sm" title="Lihat Detail">
-                                <i data-feather="eye"></i> Detail
+                            <a href="{{ route('warga.edit', $item->warga_id) }}" class="btn btn-warning btn-sm" title="Edit">
+                                <i data-feather="edit"></i> Edit
                             </a>
-                            <div class="btn-group">
-                                <a href="{{ route('warga.edit', $item->warga_id) }}" class="btn btn-warning btn-sm me-1" title="Edit">
-                                    <i data-feather="edit"></i>
-                                </a>
-                                <form action="{{ route('warga.destroy', $item->warga_id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data warga ini?')" title="Hapus">
-                                        <i data-feather="trash-2"></i>
-                                    </button>
-                                </form>
-                            </div>
+                            <form action="{{ route('warga.destroy', $item->warga_id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data warga ini?')" title="Hapus">
+                                    <i data-feather="trash-2"></i> Hapus
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -96,9 +162,23 @@
             @endforelse
         </div>
 
+        <!-- Pagination -->
+        @if($dataWarga->hasPages())
+        <div class="mt-4">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div class="pagination-info">
+                    Menampilkan {{ $dataWarga->firstItem() }} - {{ $dataWarga->lastItem() }} dari {{ $dataWarga->total() }} data
+                </div>
+                <div>
+                    {{ $dataWarga->appends(request()->query())->links() }}
+                </div>
+            </div>
+        </div>
+        @endif
+
         @if($dataWarga->count() > 0)
         <div class="mt-4 text-center text-muted">
-            <small><i data-feather="database"></i> Total: {{ $dataWarga->count() }} warga</small>
+            <small><i data-feather="database"></i> Total: {{ $dataWarga->total() }} warga</small>
         </div>
         @endif
     </div>

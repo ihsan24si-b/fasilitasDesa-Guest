@@ -17,23 +17,18 @@ class UserSeeder extends Seeder
     {
         $faker = Faker::create('id_ID');
 
-        // HAPUS DATA DENGAN CARA YANG AMAN (kecuali admin pertama jika ada)
-        User::where('email', '!=', 'admin@desa.com')->delete();
+        // HAPUS DATA DENGAN CARA YANG AMAN (kecuali admin pertama)
+        User::where('email', '!=', 'admin@example.com')->delete();
 
-        // Cek apakah admin sudah ada
-        $adminExists = User::where('email', 'admin@desa.com')->exists();
+        // User pertama (admin)
+        User::create([
+            'name' => 'Administrator',
+            'email' => 'admin@desa.com',
+            'password' => Hash::make('admin213'),
+        ]);
 
-        if (!$adminExists) {
-            // User pertama (admin)
-            User::create([
-                'name' => 'Administrator',
-                'email' => 'admin@desa.com',
-                'password' => Hash::make('admin213'),
-            ]);
-        }
-
-        // 20 user tambahan dengan nama Indonesia (lebih realistis)
-        for ($i = 1; $i <= 20; $i++) {
+        // 100 user tambahan dengan nama Indonesia
+        for ($i = 1; $i <= 100; $i++) {
             $jenisKelamin = $faker->randomElement(['male', 'female']);
             $nama = $jenisKelamin === 'male' ? $faker->firstNameMale() : $faker->firstNameFemale();
             $nama .= ' ' . $faker->lastName();
@@ -41,7 +36,7 @@ class UserSeeder extends Seeder
             User::create([
                 'name' => $nama,
                 'email' => $faker->unique()->safeEmail(),
-                'password' => Hash::make('password123'), // Password yang lebih aman
+                'password' => Hash::make('password'),
             ]);
         }
 

@@ -6,14 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
-        // Hapus tabel lama jika ada
-        Schema::dropIfExists('fasilitas_umum');
-        
-        // Buat tabel baru dengan struktur yang benar
         Schema::create('fasilitas_umum', function (Blueprint $table) {
-            $table->id('fasilitas_id'); // Primary key auto increment
+            $table->id('fasilitas_id');
             $table->string('nama', 100);
             $table->enum('jenis', ['aula', 'lapangan', 'gedung', 'taman', 'lainnya']);
             $table->text('alamat');
@@ -21,11 +20,14 @@ return new class extends Migration
             $table->string('rw', 3);
             $table->integer('kapasitas');
             $table->text('deskripsi')->nullable();
-            $table->timestamps(); // created_at & updated_at
+            $table->timestamps();
         });
     }
 
-    public function down()
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
         Schema::dropIfExists('fasilitas_umum');
     }

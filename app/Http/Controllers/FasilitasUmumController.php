@@ -1,16 +1,30 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\FasilitasUmum;
+use App\Models\SyaratFasilitas;
 use Illuminate\Http\Request;
 
 class FasilitasUmumController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data['dataFasilitas'] = FasilitasUmum::all();
-        return view('pages.fasilitas.index', $data);
+        $search  = $request->get('search');
+        $filters = $request->only(['jenis', 'rt', 'rw']);
+        $perPage = $request->get('perPage', 10);
+
+        $dataFasilitas = FasilitasUmum::with('syaratFasilitas')
+            ->when($search, function ($query) use ($search) {
+                return $query->search($search);
+            })
+            ->when($filters, function ($query) use ($filters) {
+                return $query->filter($filters);
+            })
+            ->orderBy('fasilitas_id', 'desc')
+            ->paginate($perPage)
+            ->appends($request->all());
+
+        return view('pages.fasilitas.index', compact('dataFasilitas', 'filters', 'search', 'perPage'));
     }
 
     public function create()
@@ -21,33 +35,44 @@ class FasilitasUmumController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama' => 'required|max:100',
-            'jenis' => 'required|in:aula,lapangan,gedung,taman,lainnya',
-            'alamat' => 'required',
-            'rt' => 'required|max:3',
-            'rw' => 'required|max:3',
-            'kapasitas' => 'required|integer|min:1',
-            'deskripsi' => 'nullable',
-        ], [
-            'nama.required' => 'Nama fasilitas wajib diisi',
-            'jenis.required' => 'Jenis fasilitas wajib dipilih',
-            'alamat.required' => 'Alamat wajib diisi',
-            'rt.required' => 'RT wajib diisi',
-            'rw.required' => 'RW wajib diisi',
-            'kapasitas.required' => 'Kapasitas wajib diisi',
-            'kapasitas.integer' => 'Kapasitas harus berupa angka',
-            'kapasitas.min' => 'Kapasitas minimal 1',
+            'nama'               => 'required|max:100',
+            'jenis'              => 'required|in:aula,lapangan,gedung,taman,lainnya',
+            'alamat'             => 'required',
+            'rt'                 => 'required|max:3',
+            'rw'                 => 'required|max:3',
+            'kapasitas'          => 'required|integer|min:1',
+            'deskripsi'          => 'nullable',
+            'syarat_nama'        => 'sometimes|array',
+            'syarat_nama.*'      => 'required|string|max:200',
+            'syarat_deskripsi'   => 'sometimes|array',
+            'syarat_deskripsi.*' => 'nullable|string',
         ]);
 
-        FasilitasUmum::create($validated);
+        $fasilitas = FasilitasUmum::create($validated);
+
+        if ($request->has('syarat_nama')) {
+            foreach ($request->syarat_nama as $index => $namaSyarat) {
+                SyaratFasilitas::create([
+                    'fasilitas_id' => $fasilitas->fasilitas_id,
+                    'nama_syarat'  => $namaSyarat,
+                    'deskripsi'    => $request->syarat_deskripsi[$index] ?? null,
+                ]);
+            }
+        }
 
         return redirect()->route('fasilitas.index')
-            ->with('success', 'Data fasilitas berhasil ditambahkan!');
+            ->with('success', 'Data fasilitas beserta syarat berhasil ditambahkan!');
+    }
+
+    public function show(string $id)
+    {
+        $data['fasilitas'] = FasilitasUmum::with('syaratFasilitas')->findOrFail($id);
+        return view('pages.fasilitas.show', $data);
     }
 
     public function edit(string $id)
     {
-        $data['dataFasilitas'] = FasilitasUmum::findOrFail($id);
+        $data['dataFasilitas'] = FasilitasUmum::with('syaratFasilitas')->findOrFail($id);
         return view('pages.fasilitas.edit', $data);
     }
 
@@ -56,28 +81,35 @@ class FasilitasUmumController extends Controller
         $fasilitas = FasilitasUmum::findOrFail($id);
 
         $validated = $request->validate([
-            'nama' => 'required|max:100',
-            'jenis' => 'required|in:aula,lapangan,gedung,taman,lainnya',
-            'alamat' => 'required',
-            'rt' => 'required|max:3',
-            'rw' => 'required|max:3',
-            'kapasitas' => 'required|integer|min:1',
-            'deskripsi' => 'nullable',
-        ], [
-            'nama.required' => 'Nama fasilitas wajib diisi',
-            'jenis.required' => 'Jenis fasilitas wajib dipilih',
-            'alamat.required' => 'Alamat wajib diisi',
-            'rt.required' => 'RT wajib diisi',
-            'rw.required' => 'RW wajib diisi',
-            'kapasitas.required' => 'Kapasitas wajib diisi',
-            'kapasitas.integer' => 'Kapasitas harus berupa angka',
-            'kapasitas.min' => 'Kapasitas minimal 1',
+            'nama'               => 'required|max:100',
+            'jenis'              => 'required|in:aula,lapangan,gedung,taman,lainnya',
+            'alamat'             => 'required',
+            'rt'                 => 'required|max:3',
+            'rw'                 => 'required|max:3',
+            'kapasitas'          => 'required|integer|min:1',
+            'deskripsi'          => 'nullable',
+            'syarat_nama'        => 'sometimes|array',
+            'syarat_nama.*'      => 'required|string|max:200',
+            'syarat_deskripsi'   => 'sometimes|array',
+            'syarat_deskripsi.*' => 'nullable|string',
         ]);
 
         $fasilitas->update($validated);
 
+        if ($request->has('syarat_nama')) {
+            $fasilitas->syaratFasilitas()->delete();
+
+            foreach ($request->syarat_nama as $index => $namaSyarat) {
+                SyaratFasilitas::create([
+                    'fasilitas_id' => $fasilitas->fasilitas_id,
+                    'nama_syarat'  => $namaSyarat,
+                    'deskripsi'    => $request->syarat_deskripsi[$index] ?? null,
+                ]);
+            }
+        }
+
         return redirect()->route('fasilitas.index')
-            ->with('success', 'Data fasilitas berhasil diubah!');
+            ->with('success', 'Data fasilitas beserta syarat berhasil diubah!');
     }
 
     public function destroy(string $id)
@@ -86,6 +118,6 @@ class FasilitasUmumController extends Controller
         $fasilitas->delete();
 
         return redirect()->route('fasilitas.index')
-            ->with('success', 'Data fasilitas berhasil dihapus!');
+            ->with('success', 'Data fasilitas beserta syarat berhasil dihapus!');
     }
-}
+}   

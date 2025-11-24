@@ -25,7 +25,74 @@
             </div>
         @endif
 
-        <!-- Card View untuk Guest -->
+        <!-- Filter & Search Section -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form action="{{ route('fasilitas.index') }}" method="GET">
+                    <div class="row g-3">
+                        <!-- Search -->
+                        <div class="col-md-4">
+                            <label for="search" class="form-label">Pencarian</label>
+                            <input type="text" class="form-control" id="search" name="search"
+                                   value="{{ $search }}" placeholder="Cari nama, alamat, deskripsi...">
+                        </div>
+
+                        <!-- Filter Jenis -->
+                        <div class="col-md-2">
+                            <label for="jenis" class="form-label">Jenis Fasilitas</label>
+                            <select class="form-select" id="jenis" name="jenis">
+                                <option value="">Semua</option>
+                                <option value="aula" {{ ($filters['jenis'] ?? '') == 'aula' ? 'selected' : '' }}>Aula</option>
+                                <option value="lapangan" {{ ($filters['jenis'] ?? '') == 'lapangan' ? 'selected' : '' }}>Lapangan</option>
+                                <option value="gedung" {{ ($filters['jenis'] ?? '') == 'gedung' ? 'selected' : '' }}>Gedung</option>
+                                <option value="taman" {{ ($filters['jenis'] ?? '') == 'taman' ? 'selected' : '' }}>Taman</option>
+                                <option value="lainnya" {{ ($filters['jenis'] ?? '') == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
+                            </select>
+                        </div>
+
+                        <!-- Filter RT -->
+                        <div class="col-md-2">
+                            <label for="rt" class="form-label">RT</label>
+                            <input type="text" class="form-control" id="rt" name="rt"
+                                   value="{{ $filters['rt'] ?? '' }}" placeholder="RT...">
+                        </div>
+
+                        <!-- Filter RW -->
+                        <div class="col-md-2">
+                            <label for="rw" class="form-label">RW</label>
+                            <input type="text" class="form-control" id="rw" name="rw"
+                                   value="{{ $filters['rw'] ?? '' }}" placeholder="RW...">
+                        </div>
+
+                        <!-- Items Per Page -->
+                        <div class="col-md-2">
+                            <label for="perPage" class="form-label">Item per Halaman</label>
+                            <select class="form-select" id="perPage" name="perPage">
+                                <option value="5" {{ $perPage == 5 ? 'selected' : '' }}>5</option>
+                                <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
+                                <option value="20" {{ $perPage == 20 ? 'selected' : '' }}>20</option>
+                                <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i data-feather="filter"></i> Terapkan Filter
+                                </button>
+                                <a href="{{ route('fasilitas.index') }}" class="btn btn-secondary">
+                                    <i data-feather="refresh-cw"></i> Reset
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Data Fasilitas Cards -->
         <div class="row">
             @forelse ($dataFasilitas as $item)
             <div class="col-md-6 col-lg-4 mb-4">
@@ -66,7 +133,7 @@
                         </div>
                         <div class="mb-2">
                             <small class="text-muted"><i data-feather="map-pin"></i> Alamat:</small>
-                            <p class="mb-0">{{ $item->alamat }}</p>
+                            <p class="mb-0">{{ Str::limit($item->alamat, 50) }}</p>
                         </div>
                         <div class="mb-2">
                             <small class="text-muted"><i data-feather="users"></i> RT/RW:</small>
@@ -76,6 +143,12 @@
                             <small class="text-muted"><i data-feather="user-check"></i> Kapasitas:</small>
                             <p class="mb-0">{{ $item->kapasitas }} orang</p>
                         </div>
+                        @if($item->deskripsi)
+                        <div class="mb-2">
+                            <small class="text-muted"><i data-feather="file-text"></i> Deskripsi:</small>
+                            <p class="mb-0">{{ Str::limit($item->deskripsi, 70) }}</p>
+                        </div>
+                        @endif
                     </div>
                     <div class="card-footer bg-light">
                         <div class="d-flex justify-content-between">
@@ -114,9 +187,23 @@
             @endforelse
         </div>
 
+        <!-- Pagination -->
+        @if($dataFasilitas->hasPages())
+        <div class="mt-4">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div class="pagination-info">
+                    Menampilkan {{ $dataFasilitas->firstItem() }} - {{ $dataFasilitas->lastItem() }} dari {{ $dataFasilitas->total() }} data
+                </div>
+                <div>
+                    {{ $dataFasilitas->appends(request()->query())->links() }}
+                </div>
+            </div>
+        </div>
+        @endif
+
         @if($dataFasilitas->count() > 0)
         <div class="mt-4 text-center text-muted">
-            <small><i data-feather="database"></i> Total: {{ $dataFasilitas->count() }} fasilitas</small>
+            <small><i data-feather="database"></i> Total: {{ $dataFasilitas->total() }} fasilitas</small>
         </div>
         @endif
     </div>

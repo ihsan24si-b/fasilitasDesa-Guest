@@ -35,11 +35,11 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="nama" class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('nama') is-invalid @enderror"
-                                   id="nama" name="nama" value="{{ old('nama', $dataWarga->nama) }}"
+                            <label for="nama_lengkap" class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('nama_lengkap') is-invalid @enderror"
+                                   id="nama_lengkap" name="nama_lengkap" value="{{ old('nama_lengkap', $dataWarga->nama_lengkap) }}"
                                    placeholder="Masukkan nama lengkap" required maxlength="100">
-                            @error('nama')
+                            @error('nama_lengkap')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -49,8 +49,8 @@
                             <select class="form-select @error('jenis_kelamin') is-invalid @enderror"
                                     id="jenis_kelamin" name="jenis_kelamin" required>
                                 <option value="">-- Pilih Jenis Kelamin --</option>
-                                <option value="Laki-laki" {{ old('jenis_kelamin', $dataWarga->jenis_kelamin) == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                                <option value="Perempuan" {{ old('jenis_kelamin', $dataWarga->jenis_kelamin) == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                                <option value="L" {{ old('jenis_kelamin', $dataWarga->jenis_kelamin) == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                                <option value="P" {{ old('jenis_kelamin', $dataWarga->jenis_kelamin) == 'P' ? 'selected' : '' }}>Perempuan</option>
                             </select>
                             @error('jenis_kelamin')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -87,11 +87,11 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="telp" class="form-label">No Telepon <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('telp') is-invalid @enderror"
-                                   id="telp" name="telp" value="{{ old('telp', $dataWarga->telp) }}"
+                            <label for="no_telepon" class="form-label">No Telepon <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('no_telepon') is-invalid @enderror"
+                                   id="no_telepon" name="no_telepon" value="{{ old('no_telepon', $dataWarga->no_telepon) }}"
                                    placeholder="Masukkan nomor telepon" required maxlength="15">
-                            @error('telp')
+                            @error('no_telepon')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -129,13 +129,11 @@
 
 @push('scripts')
 <script>
-    // Format input no KTP
     document.getElementById('no_ktp').addEventListener('input', function(e) {
         this.value = this.value.replace(/[^0-9]/g, '');
     });
 
-    // Format input telepon
-    document.getElementById('telp').addEventListener('input', function(e) {
+    document.getElementById('no_telepon').addEventListener('input', function(e) {
         this.value = this.value.replace(/[^0-9+]/g, '');
     });
 </script>

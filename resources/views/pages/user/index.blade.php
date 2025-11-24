@@ -32,7 +32,47 @@
             </div>
         @endif
 
-        <!-- Card View untuk Guest -->
+        <!-- Filter & Search Section -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form action="{{ route('user.index') }}" method="GET">
+                    <div class="row g-3">
+                        <!-- Search -->
+                        <div class="col-md-8">
+                            <label for="search" class="form-label">Pencarian</label>
+                            <input type="text" class="form-control" id="search" name="search"
+                                   value="{{ $search }}" placeholder="Cari nama atau email user...">
+                        </div>
+
+                        <!-- Items Per Page -->
+                        <div class="col-md-4">
+                            <label for="perPage" class="form-label">Item per Halaman</label>
+                            <select class="form-select" id="perPage" name="perPage">
+                                <option value="5" {{ $perPage == 5 ? 'selected' : '' }}>5</option>
+                                <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
+                                <option value="20" {{ $perPage == 20 ? 'selected' : '' }}>20</option>
+                                <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i data-feather="filter"></i> Terapkan Filter
+                                </button>
+                                <a href="{{ route('user.index') }}" class="btn btn-secondary">
+                                    <i data-feather="refresh-cw"></i> Reset
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Data User Cards -->
         <div class="row">
             @forelse ($dataUser as $item)
             <div class="col-md-6 col-lg-4 mb-4">
@@ -40,6 +80,9 @@
                     <div class="card-header bg-primary text-white">
                         <h6 class="mb-0">
                             <i data-feather="user"></i> {{ $item->name }}
+                            @if($item->email === session('admin_email'))
+                                <span class="badge bg-warning float-end">Anda</span>
+                            @endif
                         </h6>
                     </div>
                     <div class="card-body">
@@ -48,35 +91,36 @@
                             <p class="mb-0">{{ $item->email }}</p>
                         </div>
                         <div class="mb-3">
-                            <small class="text-muted"><i data-feather="lock"></i> Password:</small>
+                            <small class="text-muted"><i data-feather="calendar"></i> Dibuat:</small>
                             <p class="mb-0">
-                                <small class="text-muted">{{ substr($item->password, 0, 20) }}...</small>
+                                <small>{{ $item->created_at->format('d M Y H:i') }}</small>
                             </p>
                         </div>
                         <div class="mb-2">
-                            <small class="text-muted"><i data-feather="calendar"></i> Dibuat:</small>
+                            <small class="text-muted"><i data-feather="edit"></i> Diupdate:</small>
                             <p class="mb-0">
-                                <small>{{ $item->created_at->format('d M Y') }}</small>
+                                <small>{{ $item->updated_at->format('d M Y H:i') }}</small>
                             </p>
                         </div>
                     </div>
                     <div class="card-footer bg-light">
                         <div class="d-flex justify-content-between">
-                            <a href="{{ route('user.show', $item->id) }}" class="btn btn-info btn-sm" title="Lihat Detail">
-                                <i data-feather="eye"></i> Detail
+                            <a href="{{ route('user.edit', $item->id) }}" class="btn btn-warning btn-sm" title="Edit">
+                                <i data-feather="edit"></i> Edit
                             </a>
-                            <div class="btn-group">
-                                <a href="{{ route('user.edit', $item->id) }}" class="btn btn-warning btn-sm me-1" title="Edit">
-                                    <i data-feather="edit"></i>
-                                </a>
-                                <form action="{{ route('user.destroy', $item->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus user ini?')" title="Hapus">
-                                        <i data-feather="trash-2"></i>
-                                    </button>
-                                </form>
-                            </div>
+                            @if($item->email !== session('admin_email'))
+                            <form action="{{ route('user.destroy', $item->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus user ini?')" title="Hapus">
+                                    <i data-feather="trash-2"></i> Hapus
+                                </button>
+                            </form>
+                            @else
+                            <button class="btn btn-secondary btn-sm" disabled title="Tidak dapat menghapus akun sendiri">
+                                <i data-feather="shield"></i> Diri Sendiri
+                            </button>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -97,9 +141,23 @@
             @endforelse
         </div>
 
+        <!-- Pagination -->
+        @if($dataUser->hasPages())
+        <div class="mt-4">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div class="pagination-info">
+                    Menampilkan {{ $dataUser->firstItem() }} - {{ $dataUser->lastItem() }} dari {{ $dataUser->total() }} data
+                </div>
+                <div>
+                    {{ $dataUser->appends(request()->query())->links() }}
+                </div>
+            </div>
+        </div>
+        @endif
+
         @if($dataUser->count() > 0)
         <div class="mt-4 text-center text-muted">
-            <small><i data-feather="database"></i> Total: {{ $dataUser->count() }} user</small>
+            <small><i data-feather="database"></i> Total: {{ $dataUser->total() }} user</small>
         </div>
         @endif
     </div>
