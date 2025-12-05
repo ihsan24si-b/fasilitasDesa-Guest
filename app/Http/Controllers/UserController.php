@@ -1,62 +1,54 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth; // Tambahkan ini jika butuh akses Auth::user()
 
 class UserController extends Controller
 {
     public function index(Request $request)
-{
-    if (!session('admin_logged_in')) {
-        return redirect()->route('pages.auth.index')
-            ->with('error', 'Silakan login terlebih dahulu!');
-    }
+    {
+        // PEMBERSIHAN: Hapus if (!session(...))
+        // Middleware 'checkrole' di route sudah menjaga pintu ini.
 
-    $search = $request->get('search');
-    $perPage = $request->get('perPage', 10); // Default 10
+        $search  = $request->get('search');
+        $perPage = $request->get('perPage', 10);
 
-    $dataUser = User::when($search, function($query) use ($search) {
+        $dataUser = User::when($search, function($query) use ($search) {
                 return $query->search($search);
             })
             ->orderBy('id', 'desc')
             ->paginate($perPage)
             ->appends($request->all());
 
-    return view('pages.user.index', compact('dataUser', 'search', 'perPage'));
-}
-
+        return view('pages.user.index', compact('dataUser', 'search', 'perPage'));
+    }
 
     public function create()
     {
-        if (!session('admin_logged_in')) {
-            return redirect()->route('auth.index')
-                ->with('error', 'Silakan login terlebih dahulu!');
-        }
-
+        // PEMBERSIHAN: Hapus if (!session(...))
         return view('pages.user.create');
     }
 
     public function store(Request $request)
     {
-        if (!session('admin_logged_in')) {
-            return redirect()->route('pages.auth.index')
-                ->with('error', 'Silakan login terlebih dahulu!');
-        }
+        // PEMBERSIHAN: Hapus if (!session(...))
 
         $request->validate([
-            'name' => 'required|max:100',
-            'email' => 'required|email|unique:users,email',
+            'name'     => 'required|max:100',
+            'email'    => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed',
-            // HAPUS VALIDASI ROLE
+            'role'     => 'required|in:Super Admin,Admin,User' // Tambahkan validasi role biar aman
         ]);
 
         $data = [
-            'name' => $request->name,
-            'email' => $request->email,
+            'name'     => $request->name,
+            'email'    => $request->email,
             'password' => Hash::make($request->password),
-            // HAPUS ROLE DARI DATA
+            'role'     => $request->role, // Simpan role yang dipilih di form
         ];
 
         User::create($data);
@@ -66,10 +58,7 @@ class UserController extends Controller
 
     public function edit(string $id)
     {
-        if (!session('admin_logged_in')) {
-            return redirect()->route('pages.auth.index')
-                ->with('error', 'Silakan login terlebih dahulu!');
-        }
+        // PEMBERSIHAN: Hapus if (!session(...))
 
         $data['dataUser'] = User::findOrFail($id);
         return view('pages.user.edit', $data);
@@ -77,24 +66,21 @@ class UserController extends Controller
 
     public function update(Request $request, string $id)
     {
-        if (!session('admin_logged_in')) {
-            return redirect()->route('pages.auth.index')
-                ->with('error', 'Silakan login terlebih dahulu!');
-        }
+        // PEMBERSIHAN: Hapus if (!session(...))
 
         $user = User::findOrFail($id);
 
         $request->validate([
-            'name' => 'required|max:100',
-            'email' => 'required|email|unique:users,email,' . $id,
+            'name'     => 'required|max:100',
+            'email'    => 'required|email|unique:users,email,' . $id,
             'password' => 'nullable|min:8|confirmed',
-            // HAPUS VALIDASI ROLE
+            'role'     => 'required|in:Super Admin,Admin,User' // Validasi role
         ]);
 
         $data = [
-            'name' => $request->name,
+            'name'  => $request->name,
             'email' => $request->email,
-            // HAPUS ROLE DARI DATA UPDATE
+            'role'  => $request->role, // Update role
         ];
 
         if ($request->filled('password')) {
@@ -108,14 +94,12 @@ class UserController extends Controller
 
     public function destroy(string $id)
     {
-        if (!session('admin_logged_in')) {
-            return redirect()->route('pages.auth.index')
-                ->with('error', 'Silakan login terlebih dahulu!');
-        }
+        // PEMBERSIHAN: Hapus if (!session(...))
 
         $user = User::findOrFail($id);
 
-        if ($user->email === session('admin_email')) {
+        // Ganti session('admin_email') dengan Auth::user()->email
+        if ($user->id === Auth::id()) {
             return redirect()->route('pages.user.index')
                 ->with('error', 'Tidak dapat menghapus akun sendiri!');
         }

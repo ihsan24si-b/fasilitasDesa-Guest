@@ -5,18 +5,22 @@
         </a>
 
         <div class="d-flex align-items-center ms-4 mb-4 ps-2">
-            <div class="position-relative">
-                <img class="rounded-circle" src="{{ asset('assets/img/user.jpg') }}" alt="User"
-                    style="width: 40px; height: 40px;">
-                <div
-                    class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1">
-                </div>
-            </div>
-            <div class="ms-3">
-                <h6 class="mb-0">{{ session('admin_username', 'Admin') }}</h6>
-                <span>{{ session('admin_email', 'Admin') }}</span>
-            </div>
-        </div>
+    <div class="position-relative">
+
+        {{-- CARA BARU: Foto dari Auth --}}
+        <img class="rounded-circle"
+             src="{{ Auth::user()->getProfilePictureUrl() }}"
+             alt="User"
+             style="width: 40px; height: 40px; object-fit: cover;">
+
+        <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+    </div>
+    <div class="ms-3">
+        {{-- CARA BARU: Nama & Role dari Auth --}}
+        <h6 class="mb-0">{{ Auth::user()->name }}</h6>
+        <span>{{ Auth::user()->role }}</span> {{-- Menampilkan Role (Super Admin) --}}
+    </div>
+</div>
 
         <div class="navbar-nav w-100 px-3">
             <a href="{{ route('dashboard') }}"

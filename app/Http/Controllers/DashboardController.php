@@ -11,16 +11,10 @@ class DashboardController extends Controller
      */
     public function index()
     {
-         {
-        // Cek jika user sudah login
-        if (!session('admin_logged_in')) {
-            return redirect()->route('pages.auth.index')
-                           ->with('error', 'Silakan login terlebih dahulu!');
-        }
-              // $users = User::all();
+        // KITA HAPUS PENGECEKAN MANUAL DISINI.
+        // Biarkan Middleware 'checkislogin' di Route yang bekerja menjaga pintu.
 
         return view('pages.dashboard');
-    }
     }
 
     /**

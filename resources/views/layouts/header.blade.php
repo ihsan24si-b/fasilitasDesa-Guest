@@ -39,15 +39,23 @@
         </div>
 
         <div class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                <img class="rounded-circle me-lg-2" src="{{ asset('assets/img/user.jpg') }}" alt="Admin"
-                    style="width: 40px; height: 40px;">
-                <span class="d-none d-lg-inline-flex">{{ session('admin_username', 'Admin Desa') }}</span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                <a href="#" class="dropdown-item">
-                    <i class="fas fa-user me-2"></i>My Profile
-                </a>
+    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+
+        {{-- CARA BARU: Ambil foto langsung dari Auth User --}}
+        <img class="rounded-circle me-lg-2"
+             src="{{ Auth::user()->getProfilePictureUrl() }}"
+             alt="User"
+             style="width: 40px; height: 40px; object-fit: cover;">
+
+        {{-- CARA BARU: Ambil nama langsung dari Auth User --}}
+        <span class="d-none d-lg-inline-flex">{{ Auth::user()->name }}</span>
+    </a>
+    <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+        <a href="{{ route('pages.profile.show') }}" class="dropdown-item">
+            <i class="fas fa-user me-2"></i>My Profile
+        </a>
+
+                {{-- ... menu lainnya ... --}}
                 <a href="#" class="dropdown-item">
                     <i class="fas fa-cog me-2"></i>Settings
                 </a>

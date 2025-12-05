@@ -31,7 +31,6 @@
     @endif
 
     <div class="bg-light rounded p-4">
-        <!-- Search Form -->
         <form method="GET" action="{{ route('pages.user.index') }}" class="mb-4">
             <div class="row g-3 align-items-center">
                 <div class="col-md-6">
@@ -44,7 +43,6 @@
                     </div>
                 </div>
 
-                <!-- Show Entries & Reset -->
                 <div class="col-md-6">
                     <div class="row g-2 justify-content-end">
                         <div class="col-md-3">
@@ -63,7 +61,6 @@
             </div>
         </form>
 
-        <!-- Info Showing -->
         <div class="mb-3 text-muted">
             Menampilkan {{ $dataUser->firstItem() ?? 0 }} - {{ $dataUser->lastItem() ?? 0 }} dari {{ $dataUser->total() }} data
         </div>
@@ -75,6 +72,7 @@
                         <th scope="col">No</th>
                         <th scope="col">Nama</th>
                         <th scope="col">Email</th>
+                        <th scope="col">Role</th> {{-- KOLOM BARU --}}
                         <th scope="col">Aksi</th>
                     </tr>
                 </thead>
@@ -84,6 +82,16 @@
                         <td>{{ $loop->iteration + (($dataUser->currentPage() - 1) * $dataUser->perPage()) }}</td>
                         <td>{{ $item->name }}</td>
                         <td>{{ $item->email }}</td>
+                        <td>
+                            {{-- MENAMPILKAN ROLE DENGAN BADGE --}}
+                            @if($item->role == 'Super Admin')
+                                <span class="badge bg-danger">{{ $item->role }}</span>
+                            @elseif($item->role == 'Admin')
+                                <span class="badge bg-warning text-dark">{{ $item->role }}</span>
+                            @else
+                                <span class="badge bg-info text-dark">{{ $item->role }}</span>
+                            @endif
+                        </td>
                         <td>
                             <div class="btn-group" role="group">
                                 <a href="{{ route('pages.user.edit', $item->id) }}" class="btn btn-warning btn-sm">
@@ -101,14 +109,14 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4" class="text-center">Tidak ada data ditemukan</td>
+                        {{-- Colspan disesuaikan jadi 5 karena ada kolom Role --}}
+                        <td colspan="5" class="text-center">Tidak ada data ditemukan</td>
                     </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
 
-        <!-- Pagination -->
         <div class="mt-3">
             {{ $dataUser->links('pagination::bootstrap-5') }}
         </div>

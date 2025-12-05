@@ -9,11 +9,9 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            FirstUserSeeder::class,
-            UserSeeder::class,
+            UserSeeder::class, // Sudah mencakup pembuatan admin & user dummy
             WargaSeeder::class,
             FasilitasUmumSeeder::class,
         ]);
     }
 }
-

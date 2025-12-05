@@ -3,43 +3,72 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Faker\Factory as Faker;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $faker = Faker::create('id_ID');
 
-        // HAPUS DATA DENGAN CARA YANG AMAN (kecuali admin pertama)
-        User::where('email', '!=', 'admin@example.com')->delete();
+        // ==========================================
+        // 1. AKUN UTAMA (Super Admin) - Punya Kamu
+        // ==========================================
+        // Kita pakai firstOrCreate biar kalau dijalankan manual gak error duplikat
+        User::firstOrCreate(
+            ['email' => 'admin@gmail.com'], // Cek email ini
+            [
+                'name' => 'Admin Desa 1',
+                'password' => Hash::make('admin123'),
+                'role' => 'Super Admin',
+            ]
+        );
 
-        // User pertama (admin)
-        User::create([
-            'name' => 'Administrator',
-            'email' => 'admin@desa.com',
-            'password' => Hash::make('admin213'),
-        ]);
+        // ==========================================
+        // 2. AKUN CADANGAN (Super Admin)
+        // ==========================================
+        User::firstOrCreate(
+            ['email' => 'super@admin.com'],
+            [
+                'name' => 'Super Admin Desa',
+                'password' => Hash::make('password'),
+                'role' => 'Super Admin',
+            ]
+        );
 
-        // 100 user tambahan dengan nama Indonesia
+        // ==========================================
+        // 3. AKUN ADMIN BIASA
+        // ==========================================
+        User::firstOrCreate(
+            ['email' => 'admin@desa.com'],
+            [
+                'name' => 'Pak Sekretaris',
+                'password' => Hash::make('password'),
+                'role' => 'Admin',
+            ]
+        );
+
+        // ==========================================
+        // 4. DATA DUMMY (100 Warga)
+        // ==========================================
         for ($i = 1; $i <= 100; $i++) {
             $jenisKelamin = $faker->randomElement(['male', 'female']);
             $nama = $jenisKelamin === 'male' ? $faker->firstNameMale() : $faker->firstNameFemale();
             $nama .= ' ' . $faker->lastName();
 
+            // Generate email unik random
+            $emailRandom = $faker->unique()->userName . '@example.com';
+
             User::create([
                 'name' => $nama,
-                'email' => $faker->unique()->safeEmail(),
+                'email' => $emailRandom,
                 'password' => Hash::make('password'),
+                'role' => 'User',
             ]);
         }
 
-        $this->command->info('Seeder User berhasil! Total: ' . User::count() . ' data.');
+        $this->command->info('Seeder User berhasil! Total user sekarang: ' . User::count());
     }
 }
