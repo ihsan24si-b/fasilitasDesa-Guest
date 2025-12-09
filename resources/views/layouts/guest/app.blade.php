@@ -1,117 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    {{-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> --}}
+    <!-- Primary Meta Tags -->
     <meta charset="utf-8">
-    <title>@yield('title', 'iSTUDIO - Interior Design Website Template Free')</title>
+    <title>Guest - @yield ('title') </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{-- <meta name="title" content="Dashboard - Kategori Pengaduan">
+    <meta name="author" content="Themesberg">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('assets-admin/img/favicon/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets-admin/img/favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets-admin/img/favicon/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('assets-admin/img/favicon/site.webmanifest') }}">
+    <link rel="mask-icon" href="{{ asset('assets-admin/img/favicon/safari-pinned-tab.svg') }}" color="#ffffff">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff"> --}}
+
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
 
-    @include('layouts.guest.css')
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
 
-    <!-- Pagination Fix Styles -->
-    <style>
-        /*** Pagination Fix ***/
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 4px;
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            flex-wrap: wrap;
-        }
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 
-        .page-item {
-            margin: 0;
-        }
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
-        .page-link {
-            display: block;
-            padding: 8px 12px;
-            border: 1px solid #dee2e6;
-            background: white;
-            color: #0d6b68;
-            text-decoration: none;
-            border-radius: 4px;
-            min-width: 40px;
-            text-align: center;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    {{-- <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet"> --}}
 
-        .page-link:hover {
-            background: #e6f0ef;
-            border-color: #0d6b68;
-            color: #0d6b68;
-        }
+    @include('layouts.guest.js')
 
-        .page-item.active .page-link {
-            background: #0d6b68 !important;
-            color: white !important;
-            border-color: #0d6b68 !important;
-        }
 
-        .page-item.disabled .page-link {
-            color: #6c757d !important;
-            background: #f8f9fa !important;
-            border-color: #dee2e6 !important;
-            pointer-events: none;
-        }
-
-        .pagination-info {
-            color: #666;
-            font-size: 14px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .pagination {
-                gap: 2px;
-            }
-            .page-link {
-                padding: 6px 8px;
-                min-width: 35px;
-                font-size: 12px;
-            }
-        }
-    </style>
+    {{-- start css  --}}
+        @include('layouts.guest.css')
+    {{-- end css  --}}
 </head>
 
 <body>
-    <!-- Spinner Start -->
-    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-    </div>
-    <!-- Spinner End -->
-
+    {{-- navbar start --}}
     @include('layouts.guest.header')
+    {{-- navbar end --}}
 
-    <!-- Content -->
-    @yield('content')
+        {{-- di sini konten halaman lain akan muncul --}}
+    <main class="content">
+        <div class="container-fluid">
+            @yield('content')
+        </div>
+    </main>
 
-    @include('layouts.guest.footer')
+    {{-- start footer  --}}
+        @include('layouts.guest.footer')
+    {{-- end footer  --}}
 
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 
-    @include('layouts.guest.js')
-
-    <!-- Floating WhatsApp Button -->
-    <a href="https://wa.me/6285836124648?text=Halo%20admin,%20saya%20ingin%20bertanya%20tentang%20sistem%20management%20warga%20ini"
-       class="whatsapp-float"
-       target="_blank"
-       title="Hubungi kami via WhatsApp">
-        <i data-feather="message-circle"></i>
-    </a>
-
-    <!-- Feather Icons -->
-    <script src="https://unpkg.com/feather-icons"></script>
-    <script>
-        feather.replace();
-    </script>
+</main>
+    <!-- START JAVASCRIPT -->
+        @include('layouts.guest.js')
+    <!-- END JAVASCRIPT -->
 </body>
+
 </html>

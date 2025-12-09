@@ -506,3 +506,78 @@
     margin-right: 15px;
     color: #666;
 }
+
+/* Fix ukuran panah pagination biar ga nabrak */
+.pagination .page-link {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+    line-height: 1 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination .page-item {
+    margin: 0 2px;
+}
+
+.pagination svg {
+    width: 14px !important;
+    height: 14px !important;
+}
+
+
+    /* ukuran icon default */
+    .icon {
+        width: 1.25rem;
+        height: 1.25rem;
+        display: inline-block;
+    }
+
+    /* icon kecil */
+    .icon-xs {
+        width: 1rem;
+        height: 1rem;
+    }
+
+    /* icon sangat kecil */
+    .icon-xxs {
+        width: 0.85rem;
+        height: 0.85rem;
+    }
+
+    /* warna teks icon */
+    .text-gray-600 {
+        color: #6c757d !important;
+    }
+
+    /* ============================
+       BUTTON SOCIAL ICON
+       ============================ */
+
+    .btn-icon-only {
+        width: 42px;
+        height: 42px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 0; /* biar tidak ada text */
+    }
+
+    .btn-pill {
+        border-radius: 50px !important;
+    }
+
+    .btn-outline-gray-500 {
+        border: 1px solid #adb5bd !important;
+        color: #495057 !important;
+        background: transparent;
+        transition: 0.2s ease;
+    }
+
+    .btn-outline-gray-500:hover {
+        background: #adb5bd !important;
+        color: #fff !important;
+    }

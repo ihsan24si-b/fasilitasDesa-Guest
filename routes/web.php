@@ -8,14 +8,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FasilitasUmumController;
 use App\Http\Controllers\HomepageController;
 
-
-
 Route::get('/', function () {return view('layouts.guest.homepage');
 });
-
-
-
-
 
 // Homepage Routes
 Route::get('/homepage', [HomepageController::class, 'index'])->name('homepage');
@@ -43,4 +37,11 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
     Route::resource('fasilitas', \App\Http\Controllers\FasilitasUmumController::class);
 Route::resource('user', \App\Http\Controllers\UserController::class);
 
+//auth
+Route::get('auth', [AuthController::class, 'index'])->name('auth');
+Route::post('auth/login', [AuthController::class, 'login'])->name('auth.login');
+Route::get('auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
+Route::group(['middleware' => ['checkrole:admin']], function () {
+  Route::get('user', [UserController::class, 'index'])->name('user.index');
+});

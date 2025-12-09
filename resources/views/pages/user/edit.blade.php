@@ -43,6 +43,17 @@
 
                 <div class="col-md-6">
                     <div class="mb-3">
+                        <label for="role" class="form-label">Role</label>
+                        <select id="role" name="role" class="form-select" required>
+                            <option value="admin" {{ old('role', $dataUser->role) == 'admin' ? 'selected' : '' }}>Admin</option>
+                            <option value="pelanggan" {{ old('role', $dataUser->role) == 'pelanggan' ? 'selected' : '' }}>Pelanggan</option>
+                            <option value="mitra" {{ old('role', $dataUser->role) == 'mitra' ? 'selected' : '' }}>Mitra</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-3">
                         <label for="password" class="form-label">Password <span class="text-muted">(Kosongkan jika tidak ingin mengubah)</span></label>
                         <input type="password" class="form-control @error('password') is-invalid @enderror"
                                id="password" name="password" placeholder="Masukkan password baru">

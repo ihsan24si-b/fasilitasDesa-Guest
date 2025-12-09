@@ -2,49 +2,19 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-use Faker\Factory as Faker;
 
-class UserSeeder extends Seeder
+class DatabaseSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Seed the application's database.
      */
     public function run(): void
     {
-        $faker = Faker::create('id_ID');
-
-        // HAPUS DATA DENGAN CARA YANG AMAN (kecuali admin pertama jika ada)
-        User::where('email', '!=', 'admin@desa.com')->delete();
-
-        // Cek apakah admin sudah ada
-        $adminExists = User::where('email', 'admin@desa.com')->exists();
-
-        if (!$adminExists) {
-            // User pertama (admin)
-            User::create([
-                'name' => 'Administrator',
-                'email' => 'admin@desa.com',
-                'password' => Hash::make('admin213'),
-            ]);
-        }
-
-        // 20 user tambahan dengan nama Indonesia (lebih realistis)
-        for ($i = 1; $i <= 20; $i++) {
-            $jenisKelamin = $faker->randomElement(['male', 'female']);
-            $nama = $jenisKelamin === 'male' ? $faker->firstNameMale() : $faker->firstNameFemale();
-            $nama .= ' ' . $faker->lastName();
-
-            User::create([
-                'name' => $nama,
-                'email' => $faker->unique()->safeEmail(),
-                'password' => Hash::make('password123'), // Password yang lebih aman
-            ]);
-        }
-
-        $this->command->info('Seeder User berhasil! Total: ' . User::count() . ' data.');
+        $this->call([
+            UserSeeder::class,
+            WargaSeeder::class,
+            FasilitasUmumSeeder::class,
+        ]);
     }
 }

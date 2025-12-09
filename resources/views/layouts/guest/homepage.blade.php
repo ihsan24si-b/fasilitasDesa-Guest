@@ -8,13 +8,13 @@
     <div class="container py-5">
         <div class="row justify-content-center py-5">
             <div class="col-lg-10 pt-lg-5 mt-lg-5 text-center">
-                <h1 class="display-3 text-white mb-3 animated slideInDown">We Make Your Community Better</h1>
-                <p class="fs-4 text-white mb-4 animated slideInDown">Sistem Management Warga Terintegrasi Sejak 2024</p>
+                <h1 class="display-3 text-black mb-3 animated slideInDown">We Make Your Community Better</h1>
+                <p class="fs-4 text-black mb-4 animated slideInDown">Sistem Management Warga Terintegrasi Sejak 2024</p>
                 <div class="d-flex justify-content-center gap-3">
                     <a href="{{ route('warga.index') }}" class="btn btn-light py-3 px-5 animated slideInRight">
                         <i data-feather="users"></i> Kelola Data Warga
                     </a>
-                    <a href="{{ route('fasilitas.index') }}" class="btn btn-outline-light py-3 px-5 animated slideInLeft">
+                    <a href="{{ route('fasilitas.index') }}" class="btn btn-light py-3 px-5 animated slideInRight">
                         <i data-feather="home"></i> Peminjaman Fasilitas
                     </a>
                 </div>
@@ -87,7 +87,7 @@
         <div class="row g-5">
             <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                 <div class="d-flex flex-column">
-                 
+
                     <div class="w-50 bg-primary p-3 border shadow" style="margin-top: -15%;">
                         <h1 class="text-uppercase text-white mb-0">5+</h1>
                         <h6 class="text-uppercase text-white mb-0">Tahun Pengalaman</h6>
