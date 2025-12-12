@@ -4,15 +4,18 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WargaController;
+use App\Http\Controllers\PetugasController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DeveloperController; // <--- Pastikan ini ada
+use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\FasilitasUmumController;
 
 /*
 |--------------------------------------------------------------------------
-| 1. ROUTE PUBLIC / AUTH (Tidak dijaga Middleware)
+| 1. ROUTE PUBLIC / AUTH
 |--------------------------------------------------------------------------
-| Bagian ini HARUS di luar middleware 'checkislogin' agar tidak looping.
 */
 Route::prefix('pages/auth')->group(function () {
     Route::get('/login', [AuthController::class, 'index'])->name('pages.auth.index');
@@ -24,9 +27,8 @@ Route::prefix('pages/auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| 2. ROUTE PRIVATE / ADMIN (Dijaga Middleware 'checkislogin')
+| 2. ROUTE PRIVATE / ADMIN
 |--------------------------------------------------------------------------
-| User harus login dulu baru bisa akses route di dalam grup ini.
 */
 Route::group(['middleware' => ['checkislogin']], function () {
 
@@ -46,11 +48,7 @@ Route::group(['middleware' => ['checkislogin']], function () {
         Route::delete('/destroy', [ProfileController::class, 'destroy'])->name('pages.profile.destroy');
     });
 
-    // ====================================================
-    // CRUD Resource (User, Warga, Fasilitas)
-    // ====================================================
-
-    // 1. DATA USER (Hanya bisa diakses oleh Super Admin)
+    // CRUD Resources
     Route::resource('pages/user', UserController::class)->names([
         'index'   => 'pages.user.index',
         'create'  => 'pages.user.create',
@@ -58,10 +56,9 @@ Route::group(['middleware' => ['checkislogin']], function () {
         'show'    => 'pages.user.show',
         'edit'    => 'pages.user.edit',
         'update'  => 'pages.user.update',
-        'destroy' => 'pages.user.destroy'
+        'destroy' => 'pages.user.destroy',
     ])->middleware('checkrole:Super Admin');
 
-    // 2. DATA WARGA
     Route::resource('pages/warga', WargaController::class)->names([
         'index'   => 'pages.warga.index',
         'create'  => 'pages.warga.create',
@@ -69,10 +66,9 @@ Route::group(['middleware' => ['checkislogin']], function () {
         'show'    => 'pages.warga.show',
         'edit'    => 'pages.warga.edit',
         'update'  => 'pages.warga.update',
-        'destroy' => 'pages.warga.destroy'
+        'destroy' => 'pages.warga.destroy',
     ]);
 
-    // 3. DATA FASILITAS
     Route::resource('pages/fasilitas', FasilitasUmumController::class)->names([
         'index'   => 'pages.fasilitas.index',
         'create'  => 'pages.fasilitas.create',
@@ -80,7 +76,37 @@ Route::group(['middleware' => ['checkislogin']], function () {
         'show'    => 'pages.fasilitas.show',
         'edit'    => 'pages.fasilitas.edit',
         'update'  => 'pages.fasilitas.update',
-        'destroy' => 'pages.fasilitas.destroy'
+        'destroy' => 'pages.fasilitas.destroy',
     ]);
 
-});
+    Route::resource('pages/peminjaman', PeminjamanController::class)->names([
+        'index'   => 'pages.peminjaman.index',
+        'create'  => 'pages.peminjaman.create',
+        'store'   => 'pages.peminjaman.store',
+        'show'    => 'pages.peminjaman.show',
+        'edit'    => 'pages.peminjaman.edit',
+        'update'  => 'pages.peminjaman.update',
+        'destroy' => 'pages.peminjaman.destroy',
+    ]);
+
+    Route::patch('pages/peminjaman/{id}/status', [PeminjamanController::class, 'updateStatus'])
+        ->name('pages.peminjaman.update-status');
+
+    Route::resource('pages/pembayaran', PembayaranController::class)->names([
+        'index'   => 'pages.pembayaran.index',
+        'create'  => 'pages.pembayaran.create',
+        'store'   => 'pages.pembayaran.store',
+        'destroy' => 'pages.pembayaran.destroy'
+    ]);
+
+    Route::resource('pages/petugas', PetugasController::class)->names([
+        'index'   => 'pages.petugas.index',
+        'create'  => 'pages.petugas.create',
+        'store'   => 'pages.petugas.store',
+        'destroy' => 'pages.petugas.destroy',
+    ]);
+
+    // ROUTE DEVELOPER
+    Route::get('pages/developer', [DeveloperController::class, 'index'])->name('pages.developer.index');
+
+}); // <--- JANGAN HAPUS INI (Penutup Middleware)

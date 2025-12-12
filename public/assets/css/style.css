@@ -1,16 +1,14 @@
-/********** Template CSS - Clear Table Edition **********/
+/********** Template CSS - V13 (Final: Compact & Readable) **********/
 :root {
     --primary: #009CFF;
     --primary-dark: #0080d6;
     --primary-light: #33b0ff;
     --light: #F3F6F9;
     --dark: #191C24;
-    --table-border-color: #dee2e6; /* Warna border tabel lebih jelas */
-
+    --table-border-color: #dee2e6;
     --shadow-sm: 0 2px 8px rgba(0, 156, 255, 0.15);
     --shadow-md: 0 4px 16px rgba(0, 156, 255, 0.20);
     --shadow-lg: 0 8px 24px rgba(0, 156, 255, 0.25);
-
     --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -30,8 +28,8 @@ body {
     right: 45px;
     bottom: 45px;
     z-index: 99;
-    width: 45px;
-    height: 45px;
+    width: 40px; /* Sedikit dikecilkan */
+    height: 40px;
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: #fff;
     border-radius: 50%;
@@ -69,6 +67,7 @@ body {
     font-weight: 500;
     letter-spacing: 0.3px;
     border-radius: 8px;
+    padding: 8px 16px; /* Button standar lebih compact */
 }
 
 .btn.btn-primary {
@@ -84,9 +83,9 @@ body {
     transform: translateY(-2px);
 }
 
-.btn-square { width: 38px; height: 38px; }
-.btn-sm-square { width: 32px; height: 32px; }
-.btn-lg-square { width: 48px; height: 48px; }
+.btn-square { width: 36px; height: 36px; }
+.btn-sm-square { width: 30px; height: 30px; }
+.btn-lg-square { width: 45px; height: 45px; }
 
 .btn-square,
 .btn-sm-square,
@@ -153,22 +152,29 @@ body {
     .content { width: 100%; margin-left: 0; }
 }
 
-/*** Navbar ***/
+/*** Navbar (SIDEBAR - COMPACT & READABLE) ***/
 .sidebar .navbar .navbar-nav .nav-link {
-    padding: 10px 15px;
-    margin: 3px 15px;
+    /* UKURAN LEBIH COMPACT (Ramping) */
+    padding: 10px 15px; 
+    margin: 5px 15px; /* Jarak antar tombol dirapatkan dikit */
+    
     color: var(--dark);
-    font-weight: 500;
-    font-size: 14px;
-    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem; /* Font size pas, tidak kegedean */
+    border-radius: 8px; /* Radius sedikit dikecilkan biar rapi */
     border-left: none;
     outline: none;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    white-space: nowrap;
+    
+    /* --- TEKS PASTI KELIHATAN (Flexible) --- */
+    white-space: normal !important; /* Izinkan teks turun baris */
+    line-height: 1.2;               /* Jarak baris rapat agar teks 2 baris tetap terlihat menyatu */
+    
     display: flex;
     align-items: center;
+    min-height: 45px; /* Tinggi standar, tidak terlalu bongsor */
     z-index: 1;
 }
 
@@ -198,19 +204,20 @@ body {
     transform: translateX(5px);
 }
 
+/* Icon Sidebar (Compact) */
 .sidebar .navbar .navbar-nav .nav-link i {
-    width: 35px;
-    height: 35px;
-    min-width: 35px;
+    width: 32px;        /* Icon sedikit lebih kecil dari V12 (32px vs 40px) */
+    height: 32px;
+    min-width: 32px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, #FFFFFF 0%, var(--light) 100%);
-    border-radius: 10px;
+    border-radius: 8px;
     transition: all 0.3s ease;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     margin-right: 12px;
-    font-size: 14px;
+    font-size: 1rem;    /* Ukuran font icon pas */
     color: #888;
 }
 
@@ -222,79 +229,147 @@ body {
     box-shadow: var(--shadow-md);
 }
 
-.sidebar .navbar .dropdown-toggle::after {
-    position: absolute;
-    top: 18px;
-    right: 15px;
-    border: none;
-    content: "\f107";
-    font-family: "Font Awesome 5 Free";
-    font-weight: 900;
-    transition: all .3s ease;
+/*** Navbar HEADER (TOP BAR - MENYESUAIKAN SIDEBAR) ***/
+.content .navbar {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    padding-left: 30px !important;
+    padding-right: 30px !important;
+    min-height: auto;
 }
 
-.sidebar .navbar .dropdown-toggle[aria-expanded=true]::after {
-    transform: rotate(-180deg);
-    color: var(--primary);
-}
-
-.sidebar .navbar .dropdown-item {
-    padding-left: 55px;
-    border-radius: 8px;
-    margin: 2px 15px;
-    transition: all 0.3s ease;
-}
-.sidebar .navbar .dropdown-item:hover {
-    background: var(--light);
-    color: var(--primary);
-    transform: translateX(5px);
-}
-
+/* Tombol Menu Header */
 .content .navbar .navbar-nav .nav-link {
-    margin-left: 25px;
-    padding: 12px 0;
+    margin-left: 10px;
+    padding: 8px 15px;      /* Padding compact */
     color: var(--dark);
+    font-weight: 600;
     outline: none;
     transition: all 0.3s ease;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    height: 45px;           /* Tinggi disamakan dengan sidebar (45px) */
+    font-size: 0.9rem;
 }
+
 .content .navbar .navbar-nav .nav-link:hover,
-.content .navbar .navbar-nav .nav-link.active {
-    color: var(--primary);
+.content .navbar .navbar-nav .nav-link.active,
+.content .navbar .navbar-nav .nav-link[aria-expanded="true"] {
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    box-shadow: var(--shadow-sm);
     transform: translateY(-2px);
 }
+
 .content .navbar .sidebar-toggler,
 .content .navbar .navbar-nav .nav-link i {
-    width: 40px;
-    height: 40px;
+    width: 32px;            /* Icon compact 32px */
+    height: 32px;
+    min-width: 32px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #FFFFFF 0%, var(--light) 100%);
-    border-radius: 50%;
-    box-shadow: var(--shadow-sm);
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     transition: all 0.3s ease;
-    color: var(--dark);
+    color: var(--primary);
+    margin-right: 8px;
+    font-size: 1rem;
 }
+
 .content .navbar .sidebar-toggler:hover,
-.content .navbar .navbar-nav .nav-link i:hover {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    color: #FFFFFF;
+.content .navbar .navbar-nav .nav-link:hover i,
+.content .navbar .navbar-nav .nav-link.active i,
+.content .navbar .navbar-nav .nav-link[aria-expanded="true"] i {
+    background: #fff;
+    color: var(--primary);
     transform: scale(1.1);
-    box-shadow: var(--shadow-md);
 }
+
 .content .navbar .dropdown-toggle::after {
-    margin-left: 6px;
+    margin-left: 8px;
     vertical-align: middle;
     border: none;
     content: "\f107";
     font-family: "Font Awesome 5 Free";
     font-weight: 900;
     transition: all .3s ease;
+    color: #888;
+    font-size: 0.9rem;
 }
-.content .navbar .dropdown-toggle[aria-expanded=true]::after { transform: rotate(-180deg); }
+
+.content .navbar .navbar-nav .nav-link:hover::after,
+.content .navbar .navbar-nav .nav-link[aria-expanded="true"]::after {
+    color: #fff;
+    transform: rotate(-180deg);
+}
+
+.content .navbar .navbar-nav .nav-link img {
+    border: 2px solid #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 32px !important;
+    height: 32px !important;
+    margin-right: 10px;
+}
+
+/*** Header DROPDOWN MENU (Tetap Bagus & Lega) ***/
+.content .navbar .dropdown-menu {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 8px;
+    margin-top: 10px !important;
+    animation: fadeIn 0.3s ease;
+    min-width: 220px;
+}
+
+.content .navbar .dropdown-item {
+    padding: 10px 15px; /* Standar yang nyaman */
+    font-weight: 500;
+    color: var(--dark);
+    border-radius: 8px;
+    margin-bottom: 2px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.content .navbar .dropdown-item:hover {
+    background: var(--light);
+    color: var(--primary);
+    transform: translateX(5px);
+    font-weight: 600;
+}
+
+.content .navbar .dropdown-item i {
+    margin-right: 12px;
+    width: 20px;
+    text-align: center;
+    color: #888;
+    transition: 0.2s;
+    font-size: 1rem;
+}
+
+.content .navbar .dropdown-item:hover i {
+    color: var(--primary);
+}
+
+.content .navbar .dropdown-item.text-danger { color: #dc3545; }
+.content .navbar .dropdown-item.text-danger:hover { background: #ffeaea; color: #a71d2a; }
+.content .navbar .dropdown-item.text-danger i { color: #dc3545; }
+
+.content .navbar .dropdown-divider { margin: 8px 0; border-top: 1px solid #f0f2f5; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
 @media (max-width: 575.98px) {
-    .content .navbar .navbar-nav .nav-link { margin-left: 15px; }
+    .content .navbar .navbar-nav .nav-link { margin-left: 5px; }
 }
 
 /*** Date Picker ***/
@@ -370,7 +445,7 @@ body {
     border-radius: 12px;
     box-shadow: var(--shadow-sm);
     transition: all 0.3s ease;
-    border: 1px solid rgba(0,0,0,0.05); /* Border halus untuk card */
+    border: 1px solid rgba(0,0,0,0.05);
     background: #fff;
     overflow: hidden;
 }
@@ -389,7 +464,7 @@ body {
 /*** Forms ***/
 .form-control, .form-select {
     border-radius: 8px;
-    border: 1px solid #ced4da; /* Border form lebih standar agar jelas */
+    border: 1px solid #ced4da;
     padding: 10px 15px;
     transition: all 0.3s ease;
 }
@@ -398,12 +473,13 @@ body {
     border-color: var(--primary);
 }
 
-/*** Table Enhancement - High Visibility ***/
+/*** Table Enhancement ***/
 .table-responsive {
     border-radius: 8px;
     background: #fff;
-    box-shadow: 0 0 0 1px rgba(0,0,0,0.05); /* Border tipis sekeliling tabel */
-    overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
+    overflow-x: auto; 
+    -webkit-overflow-scrolling: touch;
 }
 
 .table {
@@ -429,22 +505,20 @@ body {
     transition: all 0.2s ease;
 }
 
-/* Efek Zebra: Baris ganjil/genap beda warna agar mudah dibaca */
 .table tbody tr:nth-of-type(even) {
-    background-color: #f8f9fa; /* Abu-abu sangat muda */
+    background-color: #f8f9fa;
 }
 
 .table td {
     vertical-align: middle;
     padding: 15px;
-    border-bottom: 1px solid var(--table-border-color); /* Garis bawah tegas */
+    border-bottom: 1px solid var(--table-border-color);
     color: var(--dark);
     font-size: 0.95rem;
 }
 
-/* Efek Hover yang Jelas */
 .table tbody tr:hover {
-    background-color: #e8f4ff !important; /* Biru muda saat di-hover */
+    background-color: #e8f4ff !important;
     transform: scale(1.005);
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     z-index: 2;
@@ -452,8 +526,6 @@ body {
     cursor: default;
 }
 
-/* Menghilangkan border pada baris terakhir agar rapi di dalam card */
 .table tbody tr:last-child td {
     border-bottom: none;
 }
-

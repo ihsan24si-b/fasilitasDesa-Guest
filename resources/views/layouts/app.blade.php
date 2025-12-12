@@ -13,6 +13,7 @@
 
     @include('layouts.css')
     @stack('styles')
+    
 </head>
 
 <body>

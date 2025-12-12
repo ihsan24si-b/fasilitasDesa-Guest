@@ -15,4 +15,4 @@
 <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
 
 <!-- Template Stylesheet -->
-<link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+<link href="{{ asset('assets/css/style.css') }}?v={{ time() }}" rel="stylesheet">
