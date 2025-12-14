@@ -28,19 +28,19 @@
                 <form action="{{ route('pages.peminjaman.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     
-                    {{-- Pilih Warga --}}
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Nama Peminjam (Warga)</label>
-                        <select class="form-select @error('warga_id') is-invalid @enderror" name="warga_id" required>
-                            <option value="">-- Pilih Warga --</option>
-                            @foreach ($warga as $w)
-                                <option value="{{ $w->id }}" {{ old('warga_id') == $w->id ? 'selected' : '' }}>
-                                    {{ $w->nama }} - {{ $w->no_ktp }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('warga_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                    </div>
+    <label class="form-label fw-bold">Nama Peminjam (Warga)</label>
+    <select class="form-select @error('warga_id') is-invalid @enderror" name="warga_id" required>
+        <option value="">-- Pilih Warga --</option>
+        @foreach ($warga as $w)
+            {{-- PERBAIKAN: Gunakan 'warga_id' bukan 'id' --}}
+            <option value="{{ $w->warga_id }}" {{ old('warga_id') == $w->warga_id ? 'selected' : '' }}>
+                {{ $w->nama }} - {{ $w->no_ktp }}
+            </option>
+        @endforeach
+    </select>
+    @error('warga_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+</div>
 
                     {{-- Pilih Fasilitas --}}
                     <div class="mb-3">

@@ -29,4 +29,11 @@ class PembayaranFasilitas extends Model
     {
         return $this->belongsTo(PeminjamanFasilitas::class, 'pinjam_id', 'pinjam_id');
     }
+
+    // Relasi ke Media (Resi)
+    public function media()
+    {
+        return $this->hasOne(Media::class, 'ref_id', 'bayar_id')
+                    ->where('ref_table', 'pembayaran_fasilitas');
+    }
 }

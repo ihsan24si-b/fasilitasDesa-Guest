@@ -9,55 +9,91 @@ use Illuminate\Http\Request;
 
 class PetugasController extends Controller
 {
-    // List Semua Petugas
-    public function index()
+    // 1. INDEX (Update: Tambah Search, Filter, dan Pagination Dinamis)
+    public function index(Request $request)
     {
-        $petugas = PetugasFasilitas::with(['fasilitas', 'warga'])
-                    ->latest()
-                    ->paginate(10);
+        // Ambil parameter dari URL
+        $perPage = $request->get('perPage', 10); // Default 10 baris
+        $search  = $request->get('search');
+        $fasilitasId = $request->get('fasilitas_id');
+        $peran   = $request->get('peran');
 
-        return view('pages.petugas.index', compact('petugas'));
+        // Query Dasar
+        $query = PetugasFasilitas::with(['fasilitas', 'warga']);
+
+        // Logika Pencarian (Berdasarkan Nama Warga)
+        if ($search) {
+            $query->whereHas('warga', function($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%");
+            });
+        }
+
+        // Logika Filter Fasilitas
+        if ($fasilitasId) {
+            $query->where('fasilitas_id', $fasilitasId);
+        }
+
+        // Logika Filter Peran
+        if ($peran) {
+            $query->where('peran', $peran);
+        }
+
+        // Eksekusi Pagination (withQueryString agar filter tidak hilang saat pindah halaman)
+        $petugas = $query->latest()->paginate($perPage)->withQueryString();
+
+        // Ambil data fasilitas untuk Dropdown Filter
+        $allFasilitas = FasilitasUmum::all();
+
+        return view('pages.petugas.index', compact('petugas', 'allFasilitas', 'perPage'));
     }
 
-    // Form Tambah Petugas
     public function create()
     {
         $fasilitas = FasilitasUmum::all();
         $warga = Warga::all();
-        
         return view('pages.petugas.create', compact('fasilitas', 'warga'));
     }
 
-    // Simpan Data
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'fasilitas_id' => 'required|exists:fasilitas_umum,fasilitas_id',
             'warga_id'     => 'required|exists:warga,warga_id',
-            'peran'        => 'required|in:Penanggung Jawab,Operasional,Kebersihan,Keamanan',
+            'peran'        => 'required|in:Penanggung Jawab,Operasional,Keamanan,Kebersihan',
         ]);
 
-        // Cek Duplikasi (Opsional): Apakah warga ini sudah jadi petugas dengan peran SAMA di fasilitas SAMA?
-        $exists = PetugasFasilitas::where('fasilitas_id', $request->fasilitas_id)
-                    ->where('warga_id', $request->warga_id)
-                    ->where('peran', $request->peran)
-                    ->exists();
-
-        if ($exists) {
-            return back()->with('error', 'Warga ini sudah terdaftar dengan peran tersebut di fasilitas ini.');
-        }
-
-        PetugasFasilitas::create($request->all());
+        PetugasFasilitas::create($validated);
 
         return redirect()->route('pages.petugas.index')->with('success', 'Petugas berhasil ditambahkan.');
     }
 
-    // Hapus Petugas
-    public function destroy($id)
+    public function edit($id)
     {
         $petugas = PetugasFasilitas::findOrFail($id);
-        $petugas->delete();
+        $fasilitas = FasilitasUmum::all();
+        $warga = Warga::all();
 
-        return redirect()->route('pages.petugas.index')->with('success', 'Data petugas dihapus.');
+        return view('pages.petugas.edit', compact('petugas', 'fasilitas', 'warga'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $petugas = PetugasFasilitas::findOrFail($id);
+
+        $validated = $request->validate([
+            'fasilitas_id' => 'required|exists:fasilitas_umum,fasilitas_id',
+            'warga_id'     => 'required|exists:warga,warga_id',
+            'peran'        => 'required|in:Penanggung Jawab,Operasional,Keamanan,Kebersihan',
+        ]);
+
+        $petugas->update($validated);
+
+        return redirect()->route('pages.petugas.index')->with('success', 'Data petugas berhasil diperbarui.');
+    }
+
+    public function destroy($id)
+    {
+        PetugasFasilitas::findOrFail($id)->delete();
+        return redirect()->route('pages.petugas.index')->with('success', 'Petugas berhasil dihapus.');
     }
 }

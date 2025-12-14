@@ -1,14 +1,12 @@
 <div class="sidebar pe-4 pb-3">
-    {{-- Menggunakan navbar-dark agar tulisan putih kontras dengan background gelap --}}
     <nav class="navbar navbar-dark">
         
         {{-- 1. LOGO APLIKASI --}}
         <a href="{{ route('dashboard') }}" class="navbar-brand mx-4 mb-4 px-3">
-            {{-- Pastikan file logo ada di public/assets/img/logo.png --}}
             <img src="{{ asset('assets/img/logo.png') }}" alt="Logo FDPR" style="height: 50px; width: auto;">
         </a>
 
-        {{-- 2. PROFIL USER (Bulat & Rapi) --}}
+        {{-- 2. PROFIL USER --}}
         <div class="d-flex align-items-center ms-4 mb-4 ps-2">
             <div class="position-relative">
                 <img class="rounded-circle" 
@@ -23,52 +21,57 @@
             </div>
         </div>
 
-        {{-- 3. MENU NAVIGASI UTAMA --}}
+        {{-- 3. MENU NAVIGASI --}}
         <div class="navbar-nav w-100 px-3">
             
-            {{-- GROUP: DASHBOARD --}}
+            {{-- A. DASHBOARD (Semua User) --}}
             <a href="{{ route('dashboard') }}" class="nav-item nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                 <i class="fa fa-tachometer-alt me-2"></i>Dashboard
             </a>
 
-            {{-- GROUP: MASTER DATA --}}
-            <div class="nav-item small text-muted mt-3 mb-2 ms-2 text-uppercase fw-bold" style="font-size: 0.75rem; letter-spacing: 1px;">
-                Master Data
-            </div>
+            {{-- B. GROUP ADMIN & SUPER ADMIN --}}
+            @if(in_array(Auth::user()->role, ['Super Admin', 'Admin']))
+                
+                {{-- Master Data --}}
+                <div class="nav-item small text-muted mt-3 mb-2 ms-2 text-uppercase fw-bold" style="font-size: 0.75rem; letter-spacing: 1px;">
+                    Master Data
+                </div>
 
-            <a href="{{ route('pages.warga.index') }}" class="nav-item nav-link {{ request()->routeIs('pages.warga.*') ? 'active' : '' }}">
-                <i class="fas fa-users me-2"></i>Data Warga
-            </a>
+                <a href="{{ route('pages.warga.index') }}" class="nav-item nav-link {{ request()->routeIs('pages.warga.*') ? 'active' : '' }}">
+                    <i class="fas fa-users me-2"></i>Data Warga
+                </a>
 
-            <a href="{{ route('pages.fasilitas.index') }}" class="nav-item nav-link {{ request()->routeIs('pages.fasilitas.*') ? 'active' : '' }}">
-                <i class="fas fa-building me-2"></i>Fasilitas Desa
-            </a>
+                <a href="{{ route('pages.fasilitas.index') }}" class="nav-item nav-link {{ request()->routeIs('pages.fasilitas.*') ? 'active' : '' }}">
+                    <i class="fas fa-building me-2"></i>Fasilitas Desa
+                </a>
 
-            <a href="{{ route('pages.petugas.index') }}" class="nav-item nav-link {{ request()->routeIs('pages.petugas.*') ? 'active' : '' }}">
-                <i class="fas fa-id-badge me-2"></i>Petugas / PIC
-            </a>
+                <a href="{{ route('pages.petugas.index') }}" class="nav-item nav-link {{ request()->routeIs('pages.petugas.*') ? 'active' : '' }}">
+                    <i class="fas fa-id-badge me-2"></i>Petugas / PIC
+                </a>
 
-            {{-- Khusus Super Admin --}}
-            @if(Auth::user()->role == 'Super Admin')
-            <a href="{{ route('pages.user.index') }}" class="nav-item nav-link {{ request()->routeIs('pages.user.*') ? 'active' : '' }}">
-                <i class="fas fa-user-shield me-2"></i>Manajemen User
-            </a>
-            @endif
+                {{-- Khusus Super Admin (Manajemen User) --}}
+                @if(Auth::user()->role == 'Super Admin')
+                    <a href="{{ route('pages.user.index') }}" class="nav-item nav-link {{ request()->routeIs('pages.user.*') ? 'active' : '' }}">
+                        <i class="fas fa-user-shield me-2"></i>Manajemen User
+                    </a>
+                @endif
 
-            {{-- GROUP: SIRKULASI --}}
-            <div class="nav-item small text-muted mt-3 mb-2 ms-2 text-uppercase fw-bold" style="font-size: 0.75rem; letter-spacing: 1px;">
-                Sirkulasi
-            </div>
+                {{-- Sirkulasi --}}
+                <div class="nav-item small text-muted mt-3 mb-2 ms-2 text-uppercase fw-bold" style="font-size: 0.75rem; letter-spacing: 1px;">
+                    Sirkulasi
+                </div>
 
-            <a href="{{ route('pages.peminjaman.index') }}" class="nav-item nav-link {{ request()->routeIs('pages.peminjaman.*') ? 'active' : '' }}">
-                <i class="far fa-calendar-alt me-2"></i>Booking / Sewa
-            </a>
+                <a href="{{ route('pages.peminjaman.index') }}" class="nav-item nav-link {{ request()->routeIs('pages.peminjaman.*') ? 'active' : '' }}">
+                    <i class="far fa-calendar-alt me-2"></i>Booking / Sewa
+                </a>
 
-            <a href="{{ route('pages.pembayaran.index') }}" class="nav-item nav-link {{ request()->routeIs('pages.pembayaran.*') ? 'active' : '' }}">
-                <i class="fas fa-money-bill-wave me-2"></i>Kas & Pembayaran
-            </a>
+                <a href="{{ route('pages.pembayaran.index') }}" class="nav-item nav-link {{ request()->routeIs('pages.pembayaran.*') ? 'active' : '' }}">
+                    <i class="fas fa-money-bill-wave me-2"></i>Kas & Pembayaran
+                </a>
 
-            {{-- GROUP: TENTANG (Menu Baru) --}}
+            @endif  {{-- End if Admin/Super Admin --}}
+
+            {{-- C. TENTANG (Semua User) --}}
             <div class="nav-item small text-muted mt-3 mb-2 ms-2 text-uppercase fw-bold" style="font-size: 0.75rem; letter-spacing: 1px;">
                 Tentang
             </div>
@@ -79,7 +82,7 @@
 
         </div>
 
-        {{-- 4. TOMBOL LOGOUT (Di Bawah) --}}
+        {{-- 4. TOMBOL LOGOUT --}}
         <div class="logout-section mt-4 pt-3 border-top border-secondary w-100 px-3">
             <form action="{{ route('pages.auth.logout') }}" method="POST">
                 @csrf

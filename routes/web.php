@@ -7,7 +7,7 @@ use App\Http\Controllers\WargaController;
 use App\Http\Controllers\PetugasController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DeveloperController; // <--- Pastikan ini ada
+use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\FasilitasUmumController;
@@ -27,20 +27,17 @@ Route::prefix('pages/auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| 2. ROUTE PRIVATE / ADMIN
+| 2. ROUTE PRIVATE (LOGIN REQUIRED)
 |--------------------------------------------------------------------------
 */
 Route::group(['middleware' => ['checkislogin']], function () {
 
-    // Redirect root URL ke Dashboard
-    Route::get('/', function () {
-        return redirect()->route('dashboard');
-    });
-
-    // Dashboard
+    // --- A. AKSES SEMUA ROLE (User, Admin, Super Admin) ---
+    Route::get('/', function () { return redirect()->route('dashboard'); });
+    
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    // Profile Routes
+    
+    // Profile
     Route::prefix('pages/profile')->group(function () {
         Route::get('/show', [ProfileController::class, 'show'])->name('pages.profile.show');
         Route::get('/edit', [ProfileController::class, 'edit'])->name('pages.profile.edit');
@@ -48,65 +45,47 @@ Route::group(['middleware' => ['checkislogin']], function () {
         Route::delete('/destroy', [ProfileController::class, 'destroy'])->name('pages.profile.destroy');
     });
 
-    // CRUD Resources
-    Route::resource('pages/user', UserController::class)->names([
-        'index'   => 'pages.user.index',
-        'create'  => 'pages.user.create',
-        'store'   => 'pages.user.store',
-        'show'    => 'pages.user.show',
-        'edit'    => 'pages.user.edit',
-        'update'  => 'pages.user.update',
-        'destroy' => 'pages.user.destroy',
-    ])->middleware('checkrole:Super Admin');
-
-    Route::resource('pages/warga', WargaController::class)->names([
-        'index'   => 'pages.warga.index',
-        'create'  => 'pages.warga.create',
-        'store'   => 'pages.warga.store',
-        'show'    => 'pages.warga.show',
-        'edit'    => 'pages.warga.edit',
-        'update'  => 'pages.warga.update',
-        'destroy' => 'pages.warga.destroy',
-    ]);
-
-    Route::resource('pages/fasilitas', FasilitasUmumController::class)->names([
-        'index'   => 'pages.fasilitas.index',
-        'create'  => 'pages.fasilitas.create',
-        'store'   => 'pages.fasilitas.store',
-        'show'    => 'pages.fasilitas.show',
-        'edit'    => 'pages.fasilitas.edit',
-        'update'  => 'pages.fasilitas.update',
-        'destroy' => 'pages.fasilitas.destroy',
-    ]);
-
-    Route::resource('pages/peminjaman', PeminjamanController::class)->names([
-        'index'   => 'pages.peminjaman.index',
-        'create'  => 'pages.peminjaman.create',
-        'store'   => 'pages.peminjaman.store',
-        'show'    => 'pages.peminjaman.show',
-        'edit'    => 'pages.peminjaman.edit',
-        'update'  => 'pages.peminjaman.update',
-        'destroy' => 'pages.peminjaman.destroy',
-    ]);
-
-    Route::patch('pages/peminjaman/{id}/status', [PeminjamanController::class, 'updateStatus'])
-        ->name('pages.peminjaman.update-status');
-
-    Route::resource('pages/pembayaran', PembayaranController::class)->names([
-        'index'   => 'pages.pembayaran.index',
-        'create'  => 'pages.pembayaran.create',
-        'store'   => 'pages.pembayaran.store',
-        'destroy' => 'pages.pembayaran.destroy'
-    ]);
-
-    Route::resource('pages/petugas', PetugasController::class)->names([
-        'index'   => 'pages.petugas.index',
-        'create'  => 'pages.petugas.create',
-        'store'   => 'pages.petugas.store',
-        'destroy' => 'pages.petugas.destroy',
-    ]);
-
-    // ROUTE DEVELOPER
+    // Developer Page
     Route::get('pages/developer', [DeveloperController::class, 'index'])->name('pages.developer.index');
 
-}); // <--- JANGAN HAPUS INI (Penutup Middleware)
+
+    // --- B. KHUSUS SUPER ADMIN ---
+    Route::group(['middleware' => ['checkrole:Super Admin']], function () {
+        Route::resource('pages/user', UserController::class)->names([
+            'index' => 'pages.user.index', 'create' => 'pages.user.create', 'store' => 'pages.user.store',
+            'show' => 'pages.user.show', 'edit' => 'pages.user.edit', 'update' => 'pages.user.update', 'destroy' => 'pages.user.destroy',
+        ]);
+    });
+
+
+    // --- C. ADMIN & SUPER ADMIN (User Biasa Dilarang Masuk) ---
+    Route::group(['middleware' => ['checkrole:Super Admin,Admin']], function () {
+        
+        Route::resource('pages/warga', WargaController::class)->names([
+            'index' => 'pages.warga.index', 'create' => 'pages.warga.create', 'store' => 'pages.warga.store',
+            'show' => 'pages.warga.show', 'edit' => 'pages.warga.edit', 'update' => 'pages.warga.update', 'destroy' => 'pages.warga.destroy',
+        ]);
+
+        Route::resource('pages/fasilitas', FasilitasUmumController::class)->names([
+            'index' => 'pages.fasilitas.index', 'create' => 'pages.fasilitas.create', 'store' => 'pages.fasilitas.store',
+            'show' => 'pages.fasilitas.show', 'edit' => 'pages.fasilitas.edit', 'update' => 'pages.fasilitas.update', 'destroy' => 'pages.fasilitas.destroy',
+        ]);
+
+        Route::resource('pages/petugas', PetugasController::class)->names([
+            'index' => 'pages.petugas.index', 'create' => 'pages.petugas.create', 'store' => 'pages.petugas.store',
+            'edit' => 'pages.petugas.edit', 'update' => 'pages.petugas.update', 'destroy' => 'pages.petugas.destroy',
+        ]);
+
+        Route::resource('pages/peminjaman', PeminjamanController::class)->names([
+            'index' => 'pages.peminjaman.index', 'create' => 'pages.peminjaman.create', 'store' => 'pages.peminjaman.store',
+            'show' => 'pages.peminjaman.show', 'edit' => 'pages.peminjaman.edit', 'update' => 'pages.peminjaman.update', 'destroy' => 'pages.peminjaman.destroy',
+        ]);
+        Route::patch('pages/peminjaman/{id}/status', [PeminjamanController::class, 'updateStatus'])->name('pages.peminjaman.update-status');
+
+        Route::resource('pages/pembayaran', PembayaranController::class)->names([
+            'index' => 'pages.pembayaran.index', 'create' => 'pages.pembayaran.create', 'store' => 'pages.pembayaran.store',
+            'edit' => 'pages.pembayaran.edit', 'update' => 'pages.pembayaran.update', 'destroy' => 'pages.pembayaran.destroy'
+        ]);
+    });
+
+});

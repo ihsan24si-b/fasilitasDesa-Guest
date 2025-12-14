@@ -1,22 +1,21 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash; // PENTING: Pakai Auth Facade
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
     public function index()
     {
-        // KEMBALIKAN KE NORMAL
         if (Auth::check()) {
             return redirect()->route('dashboard');
         }
         return view('pages.auth.login-form');
-    
     }
 
     public function showRegisterForm()
@@ -24,10 +23,6 @@ class AuthController extends Controller
         if (Auth::check()) {
             return redirect()->route('dashboard');
         }
-        // if (Auth::check()) {
-        //      // Jika muncul tulisan ini, berarti Login Berhasil & Session Tersimpan
-        //      return "Posisi: SUDAH LOGIN (Halo " . Auth::user()->name . "). <br> <a href='".route('dashboard')."'>Klik manual ke Dashboard</a>";
-        // }
         return view('pages.auth.register');
     }
 
@@ -40,18 +35,16 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        // Logika Login sesuai Modul
+        // Cek User & Password
         if ($user && Hash::check($request->password, $user->password)) {
-
-            // FUNGSI UTAMA: Login menggunakan Auth bawaan Laravel
+            
+            // Login Session
             Auth::login($user);
 
-            // Redirect ke Dashboard
             return redirect()->route('dashboard')
                 ->with('success', 'Selamat Datang ' . $user->name . '!');
         }
 
-        // Jika gagal
         return back()->withErrors([
             'email' => 'Email atau password salah!',
         ])->withInput($request->only('email'));
@@ -59,11 +52,12 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        // Validasi Custom (Sama seperti kodemu sebelumnya)
+        // 1. Validasi Custom (No Numbers)
         Validator::extend('no_numbers', function ($attribute, $value, $parameters, $validator) {
             return ! preg_match('/[0-9]/', $value);
         });
 
+        // 2. Aturan Validasi
         $validator = Validator::make($request->all(), [
             'nama'             => 'required|string|no_numbers',
             'email'            => 'required|email|unique:users,email',
@@ -73,7 +67,7 @@ class AuthController extends Controller
             'confirm_password' => 'required|string|same:password',
         ], [
             'nama.no_numbers' => 'Nama tidak boleh mengandung angka',
-            // ... pesan error lain tetap sama ...
+            // Tambahkan pesan custom lain jika perlu
         ]);
 
         if ($validator->fails()) {
@@ -81,17 +75,16 @@ class AuthController extends Controller
         }
 
         try {
-            // CREATE USER
-            // Note: Kita set default role jadi 'Super Admin' agar bisa tembus middleware CheckRole nanti
+            // 3. CREATE USER (Default Role: User)
             User::create([
                 'name'     => $request->nama,
                 'email'    => $request->email,
                 'password' => Hash::make($request->password),
-                'role'     => 'Super Admin', // <--- Default Role
+                'role'     => 'User', // <--- AMAN: Default jadi User Biasa
             ]);
 
             return redirect()->route('pages.auth.index')
-                ->with('success', 'Registrasi berhasil! Silakan Login');
+                ->with('success', 'Registrasi berhasil! Silakan Login.');
 
         } catch (\Exception $e) {
             return redirect()->back()
@@ -102,7 +95,6 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        // FUNGSI LOGOUT SESUAI MODUL
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

@@ -22,6 +22,7 @@
     @endif
 
     <div class="row">
+        {{-- KOLOM KIRI: INFO & DOKUMEN --}}
         <div class="col-md-8">
             <div class="bg-light rounded p-4 mb-4">
                 <h5 class="border-bottom pb-2 mb-4"><i class="fas fa-info-circle me-2"></i>Informasi Peminjaman</h5>
@@ -70,6 +71,24 @@
                     <div class="col-sm-4 text-muted">Total Biaya</div>
                     <div class="col-sm-8 fw-bold fs-5 text-success">Rp {{ number_format($peminjaman->total_biaya, 0, ',', '.') }}</div>
                 </div>
+                
+                {{-- STATUS PEMBAYARAN --}}
+                <div class="row mb-3">
+                    <div class="col-sm-4 text-muted">Status Pembayaran</div>
+                    <div class="col-sm-8">
+                        @if($peminjaman->pembayaran)
+                            <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i> LUNAS</span>
+                            <small class="text-muted d-block mt-1">
+                                Dibayar tgl: {{ $peminjaman->pembayaran->tgl_bayar->format('d/m/Y') }} 
+                                ({{ $peminjaman->pembayaran->metode }})
+                            </small>
+                        @elseif($peminjaman->total_biaya == 0)
+                            <span class="badge bg-info">GRATIS</span>
+                        @else
+                            <span class="badge bg-danger">BELUM LUNAS</span>
+                        @endif
+                    </div>
+                </div>
             </div>
 
             <div class="bg-light rounded p-4">
@@ -79,13 +98,20 @@
                     @forelse ($peminjaman->media as $media)
                         <div class="col-md-4 col-6">
                             <div class="card h-100 border-0 shadow-sm">
-                                <a href="{{ asset('storage/' . $media->file_path) }}" target="_blank">
-                                    <img src="{{ asset('storage/' . $media->file_path) }}" class="card-img-top" 
-                                         style="height: 150px; object-fit: cover; border-radius: 10px 10px 0 0;" alt="Bukti Bayar">
+                                <a href="{{ asset('storage/' . $media->file_name) }}" target="_blank">
+                                    {{-- Cek apakah file adalah image --}}
+                                    @if(in_array(pathinfo($media->file_name, PATHINFO_EXTENSION), ['jpg','jpeg','png','gif','webp']))
+                                        <img src="{{ asset('storage/' . $media->file_name) }}" class="card-img-top" 
+                                             style="height: 150px; object-fit: cover; border-radius: 10px 10px 0 0;" alt="Bukti">
+                                    @else
+                                        {{-- Jika PDF/Doc --}}
+                                        <div class="d-flex align-items-center justify-content-center bg-secondary text-white" style="height: 150px; border-radius: 10px 10px 0 0;">
+                                            <i class="fas fa-file-alt fa-3x"></i>
+                                        </div>
+                                    @endif
                                 </a>
                                 <div class="card-body p-2 text-center">
-                                    <small class="text-muted d-block text-truncate">{{ $media->file_name }}</small>
-                                    <a href="{{ asset('storage/' . $media->file_path) }}" class="btn btn-xs btn-outline-primary mt-2" download>
+                                    <a href="{{ asset('storage/' . $media->file_name) }}" class="btn btn-xs btn-outline-primary mt-2" download>
                                         <i class="fas fa-download"></i> Unduh
                                     </a>
                                 </div>
@@ -94,17 +120,29 @@
                     @empty
                         <div class="col-12 text-center text-muted py-3">
                             <i class="fas fa-file-invoice fa-2x mb-2"></i>
-                            <p>Tidak ada bukti bayar diupload.</p>
+                            <p>Tidak ada dokumen diupload.</p>
                         </div>
                     @endforelse
                 </div>
             </div>
         </div>
 
+        {{-- KOLOM KANAN: AKSI --}}
         <div class="col-md-4">
             <div class="bg-light rounded p-4 sticky-top" style="top: 100px; z-index: 10;">
                 <h5 class="mb-3 text-primary fw-bold">Aksi Admin</h5>
                 
+                {{-- TOMBOL SHORTCUT KE PEMBAYARAN --}}
+                @if(!$peminjaman->pembayaran && $peminjaman->total_biaya > 0 && !in_array($peminjaman->status, ['ditolak', 'dibatalkan']))
+                    <div class="alert alert-warning mb-3">
+                        <i class="fas fa-exclamation-triangle me-1"></i> Transaksi ini belum dibayar lunas.
+                    </div>
+                    <a href="{{ route('pages.pembayaran.create') }}" class="btn btn-warning w-100 mb-3 text-dark fw-bold">
+                        <i class="fas fa-cash-register me-2"></i>Catat Pembayaran
+                    </a>
+                    <hr>
+                @endif
+
                 {{-- Form Update Status --}}
                 <form action="{{ route('pages.peminjaman.update-status', $peminjaman->pinjam_id) }}" method="POST">
                     @csrf
