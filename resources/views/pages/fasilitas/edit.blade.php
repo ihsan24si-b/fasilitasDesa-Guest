@@ -1,105 +1,149 @@
 @extends('layouts.app')
 
 @section('title', 'FDPR - Edit Fasilitas')
-@section('content')
 
+@section('content')
 <div class="container-fluid pt-4 px-4">
+    
+    {{-- HEADER --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="mb-1">Edit Fasilitas</h2>
-            <p class="mb-0">Form untuk mengubah data fasilitas</p>
+            <h2 class="mb-1 text-primary fw-bold">Edit Fasilitas</h2>
+            <p class="mb-0 text-muted">Perbarui data fasilitas yang sudah ada.</p>
         </div>
-        <div>
-            <a href="{{ route('pages.fasilitas.index') }}" class="btn btn-secondary">Kembali</a>
-        </div>
+        <a href="{{ route('pages.fasilitas.index') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Kembali
+        </a>
     </div>
 
-    <div class="bg-light rounded p-4">
-        <form action="{{ route('pages.fasilitas.update', $dataFasilitas->fasilitas_id) }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
+    {{-- MAIN FORM CARD --}}
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-warning bg-opacity-10 py-3">
+            <h5 class="mb-0 text-dark"><i class="fas fa-edit me-2"></i>Edit Data: {{ $dataFasilitas->nama }}</h5>
+        </div>
+        
+        <div class="card-body p-4">
+            <form action="{{ route('pages.fasilitas.update', $dataFasilitas->fasilitas_id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                
+                <div class="row g-4">
+                    {{-- KOLOM KIRI --}}
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Nama Fasilitas</label>
+                            <input type="text" class="form-control" name="nama" value="{{ old('nama', $dataFasilitas->nama) }}" required>
+                        </div>
 
-            <div class="row">
-                <div class="col-md-6">
-                    {{-- Input Nama, Jenis, Alamat sama seperti Create, ganti value="{{ old(..., $dataFasilitas->...) }}" --}}
-                    <div class="mb-3">
-                        <label class="form-label">Nama Fasilitas</label>
-                        <input type="text" class="form-control" name="nama" value="{{ old('nama', $dataFasilitas->nama) }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Jenis</label>
-                        <select class="form-select" name="jenis" required>
-                            @foreach(['aula','lapangan','gedung','taman','lainnya'] as $j)
-                                <option value="{{ $j }}" {{ old('jenis', $dataFasilitas->jenis) == $j ? 'selected' : '' }}>{{ ucfirst($j) }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Alamat</label>
-                        <textarea class="form-control" name="alamat" rows="3" required>{{ old('alamat', $dataFasilitas->alamat) }}</textarea>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Jenis</label>
+                                <select class="form-select" name="jenis" required>
+                                    @foreach(['aula','lapangan','gedung','taman','lainnya'] as $j)
+                                        <option value="{{ $j }}" {{ old('jenis', $dataFasilitas->jenis) == $j ? 'selected' : '' }}>{{ ucfirst($j) }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Kapasitas</label>
+                                <input type="number" class="form-control" name="kapasitas" value="{{ $dataFasilitas->kapasitas }}" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Alamat</label>
+                            <textarea class="form-control" name="alamat" rows="2" required>{{ old('alamat', $dataFasilitas->alamat) }}</textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6 mb-3"><label class="form-label fw-bold">RT</label><input type="text" class="form-control" name="rt" value="{{ $dataFasilitas->rt }}" required></div>
+                            <div class="col-6 mb-3"><label class="form-label fw-bold">RW</label><input type="text" class="form-control" name="rw" value="{{ $dataFasilitas->rw }}" required></div>
+                        </div>
                     </div>
 
-                    {{-- MANAJEMEN FOTO --}}
-                    <div class="card mb-3 border-secondary">
-                        <div class="card-header">Kelola Foto</div>
-                        <div class="card-body">
-                            @if($dataFasilitas->media->count() > 0)
-                                <p class="small text-muted mb-2">Centang kotak di bawah foto untuk menghapusnya:</p>
-                                <div class="row g-2 mb-3">
-                                    @foreach($dataFasilitas->media as $foto)
-                                        <div class="col-4 col-sm-3 text-center">
-                                            <div class="border p-1 rounded">
-                                                <img src="{{ asset('storage/media/' . $foto->file_name) }}" class="img-fluid mb-2" style="height: 80px; object-fit: cover;">
-                                                <div class="form-check d-flex justify-content-center">
-                                                    <input class="form-check-input bg-danger border-danger" type="checkbox" name="delete_photos[]" value="{{ $foto->media_id }}" id="del_{{ $foto->media_id }}">
-                                                    <label class="form-check-label ms-1 small text-danger" for="del_{{ $foto->media_id }}">Hapus</label>
+                    {{-- KOLOM KANAN: Foto --}}
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Deskripsi</label>
+                            <textarea class="form-control" name="deskripsi" rows="3">{{ $dataFasilitas->deskripsi }}</textarea>
+                        </div>
+
+                        {{-- MANAJEMEN FOTO --}}
+                        <div class="card bg-light border">
+                            <div class="card-header bg-white fw-bold small">KELOLA FOTO</div>
+                            <div class="card-body">
+                                
+                                {{-- List Foto Lama --}}
+                                @if($dataFasilitas->media->count() > 0)
+                                    <p class="small text-muted mb-2">Centang "Hapus" untuk membuang foto:</p>
+                                    <div class="row g-2 mb-3">
+                                        @foreach($dataFasilitas->media as $foto)
+                                            <div class="col-4 col-sm-3 text-center position-relative">
+                                                <div class="border p-1 bg-white rounded">
+                                                    <img src="{{ asset('storage/media/' . $foto->file_name) }}" class="img-fluid rounded mb-1" style="height: 60px; object-fit: cover;">
+                                                    <div class="form-check d-flex justify-content-center">
+                                                        <input class="form-check-input border-danger" type="checkbox" name="delete_photos[]" value="{{ $foto->media_id }}" id="del_{{ $foto->media_id }}">
+                                                        <label class="form-check-label ms-1 small text-danger fw-bold" style="font-size: 0.7rem;" for="del_{{ $foto->media_id }}">Hapus</label>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @endif
+                                        @endforeach
+                                    </div>
+                                @endif
 
-                            <label class="form-label fw-bold">Tambah Foto Baru</label>
-                            <input type="file" class="form-control" name="photos[]" multiple accept="image/*">
-                            <div class="form-text">Pilih file baru jika ingin menambah foto.</div>
+                                {{-- Upload Baru --}}
+                                <label class="form-label fw-bold small text-success"><i class="fas fa-plus-circle me-1"></i>Upload Foto Baru</label>
+                                <input type="file" class="form-control form-control-sm" name="photos[]" multiple accept="image/*">
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-6 mb-3"><label>RT</label><input type="text" class="form-control" name="rt" value="{{ $dataFasilitas->rt }}" required></div>
-                        <div class="col-6 mb-3"><label>RW</label><input type="text" class="form-control" name="rw" value="{{ $dataFasilitas->rw }}" required></div>
-                    </div>
-                    <div class="mb-3"><label>Kapasitas</label><input type="number" class="form-control" name="kapasitas" value="{{ $dataFasilitas->kapasitas }}" required></div>
-                    <div class="mb-3"><label>Deskripsi</label><textarea class="form-control" name="deskripsi">{{ $dataFasilitas->deskripsi }}</textarea></div>
-                </div>
-            </div>
+                <hr class="my-4">
 
-            {{-- Script Syarat (Looping data lama) --}}
-            <div class="card mt-3">
-                <div class="card-header bg-primary text-white">Syarat Penggunaan</div>
-                <div class="card-body">
-                    <div id="syarat-container">
-                        @php $cnt = 0; @endphp
-                        @foreach($dataFasilitas->syaratFasilitas as $syarat)
-                            @php $cnt++; @endphp
-                            <div class="border rounded p-3 mb-3" id="syarat-{{ $cnt }}">
-                                <div class="row">
-                                    <div class="col-md-5"><input type="text" class="form-control" name="syarat_nama[]" value="{{ $syarat->nama_syarat }}" required></div>
-                                    <div class="col-md-6"><textarea class="form-control" name="syarat_deskripsi[]" rows="1">{{ $syarat->deskripsi }}</textarea></div>
-                                    <div class="col-md-1"><button type="button" class="btn btn-danger w-100" onclick="document.getElementById('syarat-{{ $cnt }}').remove()"><i class="fas fa-trash"></i></button></div>
+                {{-- SYARAT (Dynamic) --}}
+                <div class="card border-primary mb-4">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0"><i class="fas fa-list-check me-2"></i>Syarat Penggunaan</h6>
+                        <button type="button" class="btn btn-sm btn-light text-primary fw-bold" onclick="tambahSyarat()">
+                            <i class="fas fa-plus me-1"></i> Tambah
+                        </button>
+                    </div>
+                    <div class="card-body bg-light">
+                        <div id="syarat-container">
+                            {{-- Looping Data Syarat Lama --}}
+                            @php $cnt = 0; @endphp
+                            @foreach($dataFasilitas->syaratFasilitas as $syarat)
+                                @php $cnt++; @endphp
+                                <div class="card mb-2 shadow-sm border-0" id="syarat-{{ $cnt }}">
+                                    <div class="card-body p-2">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control form-control-sm" name="syarat_nama[]" value="{{ $syarat->nama_syarat }}" required>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <input type="text" class="form-control form-control-sm" name="syarat_deskripsi[]" value="{{ $syarat->deskripsi }}">
+                                            </div>
+                                            <div class="col-md-1 text-end">
+                                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="document.getElementById('syarat-{{ $cnt }}').remove()">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
-                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="tambahSyarat()">Tambah Syarat</button>
                 </div>
-            </div>
 
-            <button type="submit" class="btn btn-primary mt-4">Simpan Perubahan</button>
-        </form>
+                {{-- BUTTONS --}}
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-primary px-4"><i class="fas fa-save me-2"></i>Simpan Perubahan</button>
+                </div>
+
+            </form>
+        </div>
     </div>
 </div>
 @endsection
@@ -110,11 +154,21 @@ let syaratCount = {{ $dataFasilitas->syaratFasilitas->count() }};
 function tambahSyarat() {
     syaratCount++;
     const html = `
-        <div class="border rounded p-3 mb-3" id="syarat-${syaratCount}">
-            <div class="row">
-                <div class="col-md-5 mb-2"><input type="text" class="form-control" name="syarat_nama[]" placeholder="Nama Syarat" required></div>
-                <div class="col-md-6 mb-2"><textarea class="form-control" name="syarat_deskripsi[]" rows="1" placeholder="Deskripsi"></textarea></div>
-                <div class="col-md-1"><button type="button" class="btn btn-danger w-100" onclick="document.getElementById('syarat-${syaratCount}').remove()"><i class="fas fa-trash"></i></button></div>
+        <div class="card mb-2 shadow-sm border-0" id="syarat-${syaratCount}">
+            <div class="card-body p-2">
+                <div class="row align-items-center">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control form-control-sm" name="syarat_nama[]" placeholder="Judul Syarat" required>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control form-control-sm" name="syarat_deskripsi[]" placeholder="Deskripsi">
+                    </div>
+                    <div class="col-md-1 text-end">
+                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="document.getElementById('syarat-${syaratCount}').remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>`;
     document.getElementById('syarat-container').insertAdjacentHTML('beforeend', html);

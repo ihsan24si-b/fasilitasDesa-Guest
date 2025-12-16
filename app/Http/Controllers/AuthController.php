@@ -99,7 +99,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('pages.auth.index')
+        return redirect()->route('dashboard')
             ->with('success', 'Anda telah logout!');
     }
 }

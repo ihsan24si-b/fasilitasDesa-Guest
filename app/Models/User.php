@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Storage; // <--- WAJIB ADA AGAR TIDAK ERROR
+use Illuminate\Support\Facades\Storage;
+// <--- WAJIB ADA AGAR TIDAK ERROR
 
 class User extends Authenticatable
 {
@@ -28,7 +28,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
         ];
     }
 
@@ -36,19 +36,29 @@ class User extends Authenticatable
     public function scopeSearch($query, $search)
     {
         return $query->where('name', 'like', "%{$search}%")
-                     ->orWhere('email', 'like', "%{$search}%");
+            ->orWhere('email', 'like', "%{$search}%");
     }
 
     // Helper untuk ambil URL foto
     public function getProfilePictureUrl()
     {
-        // Cek apakah user punya foto DAN file fisiknya ada di storage public
-        if ($this->profile_picture && Storage::disk('public')->exists($this->profile_picture)) {
-            return Storage::url($this->profile_picture);
+        // Jika ada profile picture di database
+        if ($this->profile_picture) {
+            // Cek format: "profile_pictures/filename.png" atau hanya "filename.png"
+            $filePath = $this->profile_picture;
+
+            // Jika tidak ada prefix "profile_pictures/", tambahkan
+            if (! str_contains($filePath, 'profile_pictures/')) {
+                $filePath = 'profile_pictures/' . $filePath;
+            }
+
+            // Pastikan file ada
+            if (Storage::disk('public')->exists($filePath)) {
+                return Storage::url($filePath);
+            }
         }
 
-        // Jika tidak ada, pakai gambar default
-        // Pastikan kamu punya gambar user.jpg di public/assets/img/
-        return asset('assets/img/user.jpg');
+        // Fallback ke avatar API
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=009CFF&color=fff&size=150';
     }
 }

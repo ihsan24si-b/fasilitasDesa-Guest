@@ -9,11 +9,16 @@ use Illuminate\Support\Facades\Auth;
 
 class CheckIsLogin
 {
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
     public function handle(Request $request, Closure $next): Response
     {
-        // HAPUS TANDA KOMENTAR (//) AGAR AKTIF
         if (!Auth::check()) {
-            return redirect()->route('pages.auth.index')
+            // PERBAIKAN DI SINI: Gunakan nama route 'login'
+            return redirect()->route('login') 
                 ->with('error', 'Silahkan login terlebih dahulu!');
         }
 
