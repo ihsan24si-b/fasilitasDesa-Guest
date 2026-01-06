@@ -37,12 +37,12 @@
     <div class="form-group">
         <label for="email" class="form-label">Email Address</label>
         <div class="input-wrapper">
-            <input type="email" 
-                   id="email" 
-                   name="email" 
-                   class="form-control" 
-                   placeholder="Masukkan email anda" 
-                   value="{{ old('email') }}" 
+            <input type="email"
+                   id="email"
+                   name="email"
+                   class="form-control"
+                   placeholder="Masukkan email anda"
+                   value="{{ old('email') }}"
                    required autofocus>
             <i class="fas fa-envelope"></i>
         </div>
@@ -54,11 +54,11 @@
     <div class="form-group">
         <label for="password" class="form-label">Password</label>
         <div class="input-wrapper">
-            <input type="password" 
-                   id="password" 
-                   name="password" 
-                   class="form-control" 
-                   placeholder="Masukkan password" 
+            <input type="password"
+                   id="password"
+                   name="password"
+                   class="form-control"
+                   placeholder="Masukkan password"
                    required>
             <i class="fas fa-lock"></i>
         </div>

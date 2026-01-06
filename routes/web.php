@@ -27,8 +27,8 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 |--------------------------------------------------------------------------
 */
 Route::prefix('pages/auth')->group(function () {
-    Route::get('/login', [AuthController::class, 'index'])->name('login'); 
-    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register'); 
+    Route::get('/login', [AuthController::class, 'index'])->name('login');
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/login', [AuthController::class, 'login'])->name('pages.auth.login');
     Route::post('/register', [AuthController::class, 'register'])->name('pages.auth.register');
     Route::post('/logout', [AuthController::class, 'logout'])->name('pages.auth.logout');
@@ -64,6 +64,7 @@ Route::group(['middleware' => ['checkislogin']], function () {
     });
 
     // --- Semua Role (Termasuk Warga & Petugas) ---
+    //Route::get('', [DashboardController::class, 'index'])->name('dashboard.index');
     // Fasilitas & Peminjaman (Create/Show boleh semua, Edit/Delete dibatasi di controller)
     Route::resource('pages/fasilitas', FasilitasUmumController::class)->names('pages.fasilitas');
     Route::resource('pages/peminjaman', PeminjamanController::class)->names('pages.peminjaman');

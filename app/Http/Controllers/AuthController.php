@@ -37,7 +37,7 @@ class AuthController extends Controller
 
         // Cek User & Password
         if ($user && Hash::check($request->password, $user->password)) {
-            
+
             // Login Session
             Auth::login($user);
 
