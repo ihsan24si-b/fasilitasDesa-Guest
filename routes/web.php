@@ -19,7 +19,7 @@ use App\Http\Controllers\FasilitasUmumController;
 | Route ini menangani halaman depan sekaligus dashboard admin.
 | Logika pemisahan tampilan ada di Controller & View.
 */
-Route::get('/bypass-fmi', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 /*
 |--------------------------------------------------------------------------
